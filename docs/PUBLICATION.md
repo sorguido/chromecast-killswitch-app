@@ -37,3 +37,11 @@ Private signing configuration, original key, SDK/cache tools, build outputs, pre
 **PUBLIC VISIBILITY BLOCKER:** this repository remains **PRIVATE**. Its complete history is not yet publication-ready. Before changing visibility, the owner must authorize targeted history sanitization or explicitly accept publication of the identified historical context. Neither history rewriting nor visibility changes are part of this release. The private audit identifies paths and commits without reproducing secret values. A release published in this private repository retains the same access perimeter.
 
 The supplied README screenshot is the owner's real Italian home screen from the version in use. Its encoded image content is preserved, and EXIF/IPTC/comment metadata inspection found no unnecessary personal metadata to remove. It illustrates the interface, not complete validation of this release.
+
+## Published release verification
+
+**PROVEN:** [v1.1.0](https://github.com/sorguido/chromecast-killswitch-app/releases/tag/v1.1.0) was published (not draft/prerelease) at commit `0c83c63896c5d65cebe7cbfd8c1c6d78d34529cb`, with visibility still PRIVATE. All four payload assets were downloaded from GitHub and matched the published SHA256SUMS and verified local bytes. The downloaded APK signature matches the original certificate, and its VCS metadata identifies the exact tagged commit. The downloaded source archive matches every tracked blob of that tag and contains no private `development/` content. README and the real screenshot were verified through the authenticated GitHub API.
+
+APK SHA-256: `4e1583fc7421ba2ed508966ec8c567a336c0f0be5d6fa775a3a001885bf13e43`.
+
+The release also includes `RELEASE_VERIFICATION.txt` with the actual checks and payload hashes. This final publication record is a documentation-only follow-up; it does not replace the tagged source or overwrite any asset. The public-history requirement above remains open, so the overall state is `HUMAN_REQUIRED`, not `MILESTONE_COMPLETE`.

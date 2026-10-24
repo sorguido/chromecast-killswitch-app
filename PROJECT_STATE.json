@@ -2,24 +2,29 @@
   "schema_version": 2,
   "authoritative": false,
   "phase": "LOCALIZATION_PUBLICATION",
-  "phase_status": "RELEASE_READY",
+  "phase_status": "HUMAN_REQUIRED",
   "version": "1.1.0",
   "version_code": 2,
   "repository_visibility": "PRIVATE",
   "completed_gates": [
     "L1",
-    "L3"
+    "L2_CURRENT_TREE",
+    "L3",
+    "L4"
   ],
   "pending_gates": [
-    "L2_HISTORY",
-    "L4_REMOTE_VERIFICATION"
+    "L2_HISTORY_PUBLICATION_APPROVAL"
   ],
-  "evidence_note": "24 unit tests passed; instrumentation: 20 passed, one opt-in pairing case skipped on API35 emulator. Historical physical operation remains USER_REPORTED. Public visibility remains blocked by historical personal references.",
+  "evidence_note": "24 unit passes; 20 instrumented passes and one opt-in pairing skip on API35. Clean unsigned clone build, original signing continuity, emulator in-place update, published asset download hashes and exact tagged source correspondence verified. Physical operations remain user-reported for the previous app; old personal references remain in shared history.",
   "relevant_artifacts": [
     "docs/PRODUCT_SPEC.md",
     "docs/COMMAND_CONTRACT.md",
     "docs/BUILD.md",
     "docs/PUBLICATION.md"
   ],
-  "next_action": "Build from the release commit, create new v1.1.0 tag, publish in existing PRIVATE repository and verify downloaded assets. Historical private context still prevents public visibility."
+  "next_action": "Owner decides whether to authorize targeted historical privacy sanitization or explicitly accept the historical personal references before any future public visibility. Private report and actionable gate are in development/. No further independent release work remains.",
+  "release_tag": "v1.1.0",
+  "release_commit": "0c83c63896c5d65cebe7cbfd8c1c6d78d34529cb",
+  "release_url": "https://github.com/sorguido/chromecast-killswitch-app/releases/tag/v1.1.0",
+  "apk_sha256": "4e1583fc7421ba2ed508966ec8c567a336c0f0be5d6fa775a3a001885bf13e43"
 }
