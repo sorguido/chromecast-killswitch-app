@@ -1,16 +1,16 @@
-# Provenienza e modifiche locali
+# Provenance and local changes
 
-Sorgente: [LibADB Android 3.1.1](https://github.com/MuntashirAkon/libadb-android/tree/3.1.1), autore Muntashir Al-Islam. Consultazione e importazione: 24 ottobre 2026. Mantengo gli SPDX e le licenze upstream; per i file duali uso Apache-2.0, senza alterare le licenze degli altri file.
+Source: [LibADB Android 3.1.1](https://github.com/MuntashirAkon/libadb-android/tree/3.1.1), by Muntashir Al-Islam. Inspected/imported on 24 October 2026. I retain upstream SPDX identifiers and license texts; for dual-licensed files I select Apache-2.0 without changing other files' licenses.
 
-Archivio originale `https://github.com/MuntashirAkon/libadb-android/archive/refs/tags/3.1.1.tar.gz`, SHA-256 `3afbe40b278ddea4480ebb8e7b707404f827d8e41b383e12f4b1b0b82dab1d84`.
+Original archive: `https://github.com/MuntashirAkon/libadb-android/archive/refs/tags/3.1.1.tar.gz`, SHA-256 `3afbe40b278ddea4480ebb8e7b707404f827d8e41b383e12f4b1b0b82dab1d84`.
 
-Importati `libadb/src/main` e `COPYING`/`LICENSES`; il modulo Gradle è locale. La crittografia SPAKE2, HKDF, AES-GCM e il protocollo di pairing restano upstream.
+Imported `libadb/src/main` and `COPYING`/`LICENSES`; the Gradle module is local. SPAKE2, HKDF, AES-GCM and the pairing protocol remain upstream code.
 
-Modifiche del 24 ottobre 2026:
+Changes of 24 October 2026:
 
-- `AdbConnection`: connessione TCP entro 6 secondi; letture TCP/TLS entro 15 secondi; socket chiuso se il costruttore fallisce; attesa thread in chiusura limitata a 2 secondi. Rifiuto di AUTH/CNXN privi di TLS e limite del payload negoziato alla capacità del client. Rimossi stack trace di eccezioni che potrebbero esporre endpoint.
-- `PairingConnectionCtx`: socket cancellabile, connect entro 6 secondi, letture entro 12 secondi, chiusura null-safe. `destroy()` separato dalla cancellazione per evitare distruzione concorrente del contesto SPAKE2. Nessun log del PeerInfo. Esposizione del solo GUID ricevuto dopo PAKE riuscita, validazione del discriminante AOSP `ADB_DEVICE_GUID=1` e della stringa terminata da NUL. L'app deriva dal GUID il seriale secondo `GenerateDeviceGuid()` AOSP, senza leggere la proprietà protetta dalla shell.
-- `SslUtils`: contesto TLS creato per la chiave corrente, senza cache statica di una precedente identità; eliminato messaggio stdout. La politica upstream di trust TLS rimane invariata: vedere il limite documentato nel [dossier trasporto](../../research/decisions/TRANSPORT.md).
-- `AdbInputStream`/`AdbStream`: drenaggio dei byte già ricevuti anche dopo CLSE, EOF senza attesa indefinita su coda vuota con chiusura pendente e byte singolo senza estensione del segno.
+- `AdbConnection`: TCP connection deadline of 6 seconds; TCP/TLS read deadline of 15 seconds; close socket on constructor failure; limit close-time thread wait to 2 seconds. Reject AUTH/CNXN without TLS and bound negotiated payload to client capacity. Remove exception stack traces that could expose endpoints.
+- `PairingConnectionCtx`: cancellable socket, 6-second connection/12-second read deadlines and null-safe close. Separate `destroy()` from cancellation to avoid concurrent SPAKE2 context destruction. No PeerInfo logging. Expose only the GUID received after successful PAKE, validate AOSP discriminator `ADB_DEVICE_GUID=1` and the NUL-terminated string. The app derives the serial from the GUID following AOSP `GenerateDeviceGuid()` without reading a shell-protected property.
+- `SslUtils`: create TLS context for the current key instead of statically caching a previous identity; remove stdout message. The upstream TLS trust policy remains unchanged: it does not strongly authenticate the server against an active LAN attacker. The [operation contract](../../docs/COMMAND_CONTRACT.md#target-and-preflight) documents the trusted-LAN requirement and limitations of saved identity checks.
+- `AdbInputStream`/`AdbStream`: drain already received bytes even after CLSE, return EOF without an indefinite empty-queue wait when close is pending, and prevent sign extension of single-byte reads.
 
-L'app usa `AdbConnection.Builder`, `PairingConnectionCtx` e `open("reboot:")`. Non usa gli helper di connessione automatica upstream, che possono scegliere il primo dispositivo trovato.
+The app uses `AdbConnection.Builder`, `PairingConnectionCtx` and `open("reboot:")`. It does not use upstream automatic-connection helpers that may select the first discovered device. The build's `spake2Aar` property supports relinking with a modified LGPL library; see [SPAKE2 source](../spake2-source/README.md).

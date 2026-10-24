@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Original app code; see LICENSE and LICENSE-ADDITIONAL-PERMISSION.
 package it.sorguido.chromecastkillswitch.transport
 
 import android.content.Context
@@ -11,6 +13,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.ArrayDeque
 
+enum class DiscoveryFailure { NETWORK_DENIED, UNAVAILABLE, FAILED, RESOLUTION }
+
 /** Resolves both service types, never selects or authenticates a target. Main-thread lifecycle. */
 @Suppress("DEPRECATION")
 class AdbDiscovery(context: Context) {
@@ -22,8 +26,8 @@ class AdbDiscovery(context: Context) {
     private val listeners = mutableListOf<NsdManager.DiscoveryListener>()
     private val _endpoints = MutableStateFlow<List<Endpoint>>(emptyList())
     val endpoints: StateFlow<List<Endpoint>> = _endpoints.asStateFlow()
-    private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error.asStateFlow()
+    private val _error = MutableStateFlow<DiscoveryFailure?>(null)
+    val error: StateFlow<DiscoveryFailure?> = _error.asStateFlow()
     private var multicast: WifiManager.MulticastLock? = null
     private var generation = 0
     private var running = false
@@ -43,10 +47,10 @@ class AdbDiscovery(context: Context) {
             discover("_adb-tls-pairing._tcp.", EndpointKind.PAIRING)
             discover("_adb-tls-connect._tcp.", EndpointKind.CONNECT)
         } catch (_: SecurityException) {
-            _error.value = "Accesso alla rete locale negato. Controlla i permessi dell’app nelle impostazioni del telefono."
+            _error.value = DiscoveryFailure.NETWORK_DENIED
             stop()
         } catch (_: RuntimeException) {
-            _error.value = "Ricerca non disponibile. Riprova o inserisci l’endpoint mostrato sul televisore."
+            _error.value = DiscoveryFailure.UNAVAILABLE
             stop()
         }
     }
@@ -59,7 +63,7 @@ class AdbDiscovery(context: Context) {
             override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) {
                 handler.post {
                     if (epoch == generation && running) {
-                        _error.value = "Ricerca non riuscita. Controlla la rete locale e riprova."
+                        _error.value = DiscoveryFailure.FAILED
                         stop()
                     }
                 }
@@ -117,7 +121,7 @@ class AdbDiscovery(context: Context) {
             })
         } catch (_: RuntimeException) {
             resolving = false
-            _error.value = "Impossibile risolvere l’endpoint. Prova il collegamento manuale."
+            _error.value = DiscoveryFailure.RESOLUTION
             resolveNext(epoch)
         }
     }

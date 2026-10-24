@@ -1,47 +1,32 @@
-# Android / Gradle
+# Private working material, signing, caches, SDKs, builds and release staging.
+/development/
+
+# Tool-created exceptions when Gradle/Android Studio is invoked directly.
 .gradle/
 .kotlin/
-**/build/
 local.properties
 .idea/
 *.iml
-.cxx/
-.externalNativeBuild/
-captures/
 
-# Deliverable binari: consegnare come artefatti, non nel sorgente
-*.apk
-*.aab
-*.apks
-
-# Segreti e identità locali
+# Defense against misplaced secrets and distributable binaries.
 .env
 .env.*
 !.env.example
 *.jks
 *.keystore
-keystore.properties
 signing.properties
+keystore.properties
 *.p12
 *.pfx
 *.key
 adbkey
 adbkey.pub
-private/
-.local/
+*.apk
+*.aab
+*.apks
 
-# File temporanei
-*.log
-*.tmp
-*.swp
-.DS_Store
-__pycache__/
-
-# Diagnostica locale e cache Android
+# Crash files may be written outside configurable output paths.
 hs_err_pid*
 replay_pid*
 /core
 /core.*
-
-# Bundle locale per collaudo/consegna, metadati in evidence/current
-deliverables/

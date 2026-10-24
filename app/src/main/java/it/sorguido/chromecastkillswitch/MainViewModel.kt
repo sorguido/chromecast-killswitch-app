@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Original app code; see LICENSE and LICENSE-ADDITIONAL-PERMISSION.
 package it.sorguido.chromecastkillswitch
 
 import android.app.Application
@@ -11,14 +13,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.first
-import java.text.DateFormat
-import java.util.Date
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val store = PrivateStore(application)
     private val transport = AdbTransport(application)
     private val discovery = AdbDiscovery(application)
-    private val mutable = MutableStateFlow(UiState(detail = "Associa il telefono alla tua Chromecast per iniziare."))
+    private val mutable = MutableStateFlow(UiState(detail = UiText(R.string.detail_start)))
     val state = mutable.asStateFlow()
     private var foreground = false
     private var worker: Job? = null
@@ -31,10 +31,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val target = store.identity()
             lastEndpoint = store.endpoint()?.let { Endpoint(it.first, it.second) }
             mutable.update { it.copy(targetName = target?.model, paired = store.pairedHost() != null,
-                pending = store.read() != null, detail = if (target == null) it.detail else "Aggiorna per leggere la configurazione attuale.") }
+                pending = store.read() != null, detail = if (target == null) it.detail else UiText(R.string.detail_refresh)) }
         } catch (_: Exception) {
             storageHealthy = false
-            mutable.update { it.copy(error = "Dati locali non leggibili. Nessuna modifica consentita. Ripristina i dati dell’app solo dopo aver verificato la Chromecast dal televisore.") }
+            mutable.update { it.copy(error = UiText(R.string.storage_unreadable)) }
         }
         viewModelScope.launch {
             discovery.endpoints.collect { endpoints ->
@@ -44,7 +44,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         viewModelScope.launch { discovery.error.collect { error ->
-            if (error != null) mutable.update { it.copy(error = error, discoveryRunning = false) }
+            if (error != null) mutable.update { it.copy(error = error.uiText(), discoveryRunning = false) }
         } }
     }
 
@@ -63,10 +63,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
     fun pair(host: String, port: Int, code: String) = runWork {
         val endpoint = Endpoint.parse(host, port.toString(), EndpointKind.PAIRING)
-        progress("Associazione del telefono in corso…")
+        progress(UiText(R.string.progress_pairing))
         withContext(Dispatchers.IO) { transport.pair(endpoint, code); store.savePairing(endpoint.host) }
-        mutable.update { it.copy(paired = true, connection = "Telefono associato", error = null,
-            detail = "Ora scegli il servizio di collegamento della stessa Chromecast, oppure inserisci IP e porta dalla schermata Debug wireless del TV.") }
+        mutable.update { it.copy(paired = true, connection = UiText(R.string.connection_paired), error = null,
+            detail = UiText(R.string.detail_paired)) }
     }
     fun connect(host: String, port: Int) = runWork {
         val endpoint = Endpoint.parse(host, port.toString())
@@ -77,7 +77,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         try { inspectConnection(attempted) }
         catch (firstFailure: Exception) {
             if (!foreground || firstFailure is CancellationException) throw firstFailure
-            progress("Ricerca della porta corrente della Chromecast…")
+            progress(UiText(R.string.progress_find_port))
             val resolved = withTimeoutOrNull(12_000) {
                 discovery.endpoints.first { endpoints ->
                     withContext(Dispatchers.IO) {
@@ -108,8 +108,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 if (e.failure != Failure.REBOOT_UNCERTAIN) throw e
                 // La richiesta potrebbe essere arrivata: segue solo riconciliazione, mai replay.
             }
-            mutable.update { it.copy(pending = true, connection = "In attesa del riavvio", configuration = "Da verificare",
-                detail = "Modifica salvata. Attendo un nuovo avvio e rileggo la configurazione.") }
+            mutable.update { it.copy(pending = true, connection = UiText(R.string.connection_reboot_wait), configuration = UiText(R.string.configuration_unverified),
+                detail = UiText(R.string.detail_saved)) }
             repeat(12) {
                 if (!foreground) return@runWork
                 delay(5_000)
@@ -118,13 +118,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     if (!state.value.pending) return@runWork
                 } catch (_: Exception) { /* Riprova solo letture, con limite finito. */ }
             }
-            mutable.update { it.copy(connection = "Verifica da completare", configuration = "Da verificare", canOperate = false,
-                detail = "Il riavvio non è ancora verificato. Se necessario riattiva il Debug wireless dal TV, poi premi Aggiorna. Nessun comando verrà ripetuto automaticamente.") }
+            mutable.update { it.copy(connection = UiText(R.string.connection_check_pending), configuration = UiText(R.string.configuration_unverified), canOperate = false,
+                detail = UiText(R.string.detail_reboot_unverified)) }
         }
     }
 
     private suspend fun inspectConnection(endpoints: List<Endpoint>, announceFailure: Boolean = true) {
-        if (endpoints.isEmpty()) throw UserFacingException("Nessuna Chromecast trovata. Apri il Debug wireless sul TV, cerca di nuovo oppure inserisci IP e porta correnti.")
+        if (endpoints.isEmpty()) throw UserFacingException(UiText(R.string.no_chromecast))
         val expected = withContext(Dispatchers.IO) { store.identity() }
         withContext(Dispatchers.IO) { store.pairedHost() } ?: throw IllegalStateException("Associazione necessaria")
         var lastFailure: Exception? = null
@@ -143,8 +143,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 lastEndpoint = endpoint
                 val pending = withContext(Dispatchers.IO) { store.read() != null }
                 mutable.update { it.copy(targetName = result.snapshot.identity.model, paired = true,
-                    connection = "Collegata e identificata", configuration = configurationLabel(result.snapshot.configuration),
-                    lastRead = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date()), pending = pending,
+                    connection = UiText(R.string.connection_identified), configuration = configurationLabel(result.snapshot.configuration),
+                    lastRead = System.currentTimeMillis(), pending = pending,
                     canOperate = foreground && result.snapshot.configuration != Configuration.CONFLICT && result.snapshot.bootCompleted,
                     error = null, detail = resultText(result), progress = null) }
                 return
@@ -162,21 +162,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun runWork(block: suspend () -> Unit) {
         if (!storageHealthy || worker?.isActive == true) return
-        mutable.update { it.copy(busy = true, canOperate = false, error = null, configuration = "Da verificare", progress = null) }
+        mutable.update { it.copy(busy = true, canOperate = false, error = null, configuration = UiText(R.string.configuration_unverified), progress = null) }
         worker = viewModelScope.launch {
             try { block() }
             catch (e: CancellationException) { throw e }
             catch (e: Exception) {
                 val message = when (e) {
-                    is OperationException -> e.message ?: "Operazione non verificata."
-                    is TransportException -> e.message ?: "Collegamento non verificato."
-                    is UserFacingException -> e.message ?: "Stato da verificare."
-                    is IllegalArgumentException -> "Controlla indirizzo, porta e codice: usa i valori correnti mostrati sul TV."
-                    is SecurityException -> "Accesso alla rete negato. Controlla i permessi dell’app nelle impostazioni del telefono."
-                    else -> "Collegamento non riuscito o autorizzazione scaduta. Controlla rete locale e Debug wireless sul TV; se necessario associa di nuovo il telefono."
+                    is OperationException -> e.failure.uiText()
+                    is TransportException -> e.reason.uiText()
+                    is UserFacingException -> e.text
+                    is IllegalArgumentException -> UiText(R.string.invalid_endpoint)
+                    is SecurityException -> UiText(R.string.network_denied)
+                    else -> UiText(R.string.connection_failed)
                 }
-                mutable.update { it.copy(connection = "Non verificata", configuration = "Da verificare", canOperate = false, error = message,
-                    detail = "L’app non può riaccendere il Debug wireless da remoto. Apri la guida, riprova oppure usa l’endpoint corrente.") }
+                mutable.update { it.copy(connection = UiText(R.string.connection_unverified), configuration = UiText(R.string.configuration_unverified), canOperate = false, error = message,
+                    detail = UiText(R.string.detail_recovery)) }
             } finally {
                 val pending = runCatching { withContext(Dispatchers.IO) { store.read() != null } }.getOrDefault(true)
                 mutable.update { it.copy(busy = false, pending = pending, progress = null) }
@@ -186,38 +186,38 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun onStage(stage: OperationStage) {
         progress(when (stage) {
-            OperationStage.PREFLIGHT -> "Controllo Chromecast, profilo e configurazione…"
-            OperationStage.WRITING -> "Salvataggio delle impostazioni Android…"
-            OperationStage.READBACK -> "Verifica delle impostazioni salvate…"
-            OperationStage.SAVED -> "Configurazione salvata e riletta."
-            OperationStage.REBOOT_REQUESTED -> "Richiesta di riavvio…"
-            OperationStage.WAITING_FOR_REBOOT -> "Attesa del nuovo avvio…"
-            OperationStage.VERIFIED -> "Configurazione verificata dopo il riavvio."
+            OperationStage.PREFLIGHT -> UiText(R.string.progress_preflight)
+            OperationStage.WRITING -> UiText(R.string.progress_writing)
+            OperationStage.READBACK -> UiText(R.string.progress_readback)
+            OperationStage.SAVED -> UiText(R.string.progress_saved)
+            OperationStage.REBOOT_REQUESTED -> UiText(R.string.progress_reboot_requested)
+            OperationStage.WAITING_FOR_REBOOT -> UiText(R.string.progress_waiting_reboot)
+            OperationStage.VERIFIED -> UiText(R.string.progress_verified)
         })
     }
-    private fun progress(text: String) { mutable.update { it.copy(progress = text) } }
-    private fun uiEndpoint(e: Endpoint) = UiEndpoint("${e.kind}:${e.address}", e.serviceName.ifBlank { "Chromecast sulla rete" }, e.host, e.port)
+    private fun progress(text: UiText) { mutable.update { it.copy(progress = text) } }
+    private fun uiEndpoint(e: Endpoint) = UiEndpoint("${e.kind}:${e.address}", e.serviceName, e.host, e.port)
     private fun adapter(session: AdbSession) = object : CommandSession {
         override fun shell(command: String) = session.shell(command)
         override fun reboot() = session.reboot()
     }
     private fun configurationLabel(c: Configuration) = when(c) {
-        Configuration.ON -> "Configurazione ON"
-        Configuration.OFF -> "Configurazione OFF"
-        Configuration.PARTIAL -> "Configurazione parziale"
-        Configuration.CONFLICT -> "Configurazione in conflitto"
+        Configuration.ON -> UiText(R.string.configuration_on)
+        Configuration.OFF -> UiText(R.string.configuration_off)
+        Configuration.PARTIAL -> UiText(R.string.configuration_partial)
+        Configuration.CONFLICT -> UiText(R.string.configuration_conflict)
     }
-    private fun resultText(result: Reconciliation): String = when (result.status) {
-        ReconciliationStatus.VERIFIED -> "Configurazione verificata dopo un nuovo avvio. Lo stato del tunnel VPN resta separato."
+    private fun resultText(result: Reconciliation): UiText = when (result.status) {
+        ReconciliationStatus.VERIFIED -> UiText(R.string.result_verified)
         ReconciliationStatus.NO_PENDING_OPERATION -> if (result.snapshot.configuration == Configuration.CONFLICT)
-            "È presente un altro provider o una configurazione con eccezioni. Nessuna modifica consentita."
-            else "Impostazioni Android lette ora. Questo stato non certifica che il tunnel VPN sia connesso."
-        ReconciliationStatus.WAITING_FOR_REBOOT -> "Operazione in sospeso: un nuovo avvio non è ancora verificato. Attendi e aggiorna; nessun comando viene ripetuto."
-        ReconciliationStatus.BOOT_IN_PROGRESS -> "La Chromecast sta completando l’avvio. Attendi e aggiorna."
-        ReconciliationStatus.STATE_MISMATCH -> "Il nuovo avvio è stato rilevato, ma la configurazione non corrisponde alla richiesta. Scegli esplicitamente come procedere."
-        else -> "Operazione interrotta prima della conferma del riavvio. Controlla lo stato e scegli esplicitamente se riprovare."
+            UiText(R.string.result_conflict)
+            else UiText(R.string.result_read)
+        ReconciliationStatus.WAITING_FOR_REBOOT -> UiText(R.string.result_waiting)
+        ReconciliationStatus.BOOT_IN_PROGRESS -> UiText(R.string.result_booting)
+        ReconciliationStatus.STATE_MISMATCH -> UiText(R.string.result_mismatch)
+        else -> UiText(R.string.result_interrupted)
     }
     override fun onCleared() { discovery.stop(); super.onCleared() }
 }
 
-private class UserFacingException(message: String) : Exception(message)
+private class UserFacingException(val text: UiText) : Exception()

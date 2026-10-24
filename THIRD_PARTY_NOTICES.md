@@ -1,33 +1,50 @@
-# Componenti di terze parti
+# Third-party notices
 
-Questa app incorpora i componenti sotto elencati. Le licenze originali, i copyright e le esclusioni di garanzia restano applicabili ai rispettivi componenti; il repository privato e la selezione Apache di LibADB non trasformano SPAKE2 in codice proprietario o Apache.
+Copyright © 2026 sorguido. The original application code is licensed under the GNU General Public License, version 3 **or any later version** (`GPL-3.0-or-later`), with the narrow [additional permission for Conscrypt/BoringSSL](LICENSE-ADDITIONAL-PERMISSION). The complete GPL text is in [LICENSE](LICENSE).
 
-## Componenti inclusi nell'APK
+Third-party components retain their original copyright, licenses and disclaimers. Selecting Apache-2.0 for dual-licensed LibADB files does not relicense SPAKE2 or other dependencies. Original license texts below are preserved without translation.
 
-| Componente e versione | Autori / titolari indicati upstream | Licenza e materiale allegato |
+## Components included in the APK
+
+| Component/version | Upstream authors/copyright holders | License and included material |
 | --- | --- | --- |
-| LibADB Android 3.1.1, con modifiche locali | Muntashir Al-Islam; autori identificati negli header dei singoli file | Scelta Apache-2.0 per i file duali GPL-3.0-or-later / Apache-2.0; ulteriori header BSD/MIT conservati. [COPYING](vendor/libadb/COPYING), [licenze](vendor/libadb/LICENSES/Apache-2.0), [modifiche](vendor/libadb/LOCAL_CHANGES.md), sorgenti completi nel modulo. |
-| SPAKE2 Android 2.2.1 | Copyright 2021 Muntashir Al-Islam | [LGPL-3.0](vendor/spake2-source/COPYING.LESSER), con [GPL-3.0](vendor/spake2-source/COPYING) incorporata. [Sorgenti esatti, submodule e ricompilazione](vendor/spake2-source/README.md). |
-| SPAKE2-C, commit `0d15933e5ba3e662cb01245a7ac0dc9fca3eac31` | Google Inc., Muntashir Al-Islam, Free Software Foundation e autori negli header | Licenza del progetto LGPL-3.0; `spake2.c` conserva una licenza permissiva ISC, `sha512.c`/header derivati da glibc dichiarano LGPL-2.1-or-later, utilizzabile con versione successiva. Testi e attribuzioni originali sono nell'archivio del submodule allegato. |
-| Conscrypt Android 2.5.3 | The Android Open Source Project e contributori Conscrypt; porzioni Apache Harmony e Netty | [Apache-2.0](vendor/licenses/Conscrypt-LICENSE) e [NOTICE originale](vendor/licenses/Conscrypt-NOTICE). Non è una libreria sottoposta a una nuova licenza da questa app. |
-| BoringSSL incorporato da Conscrypt, commit `49f0329110a1d93a5febc2bceceedc655d995420` | OpenSSL Project, Eric Young, Google e autori specifici | [Testo completo](vendor/licenses/BoringSSL-LICENSE): OpenSSL/SSLeay, ISC e MIT per le porzioni indicate. Revisione rilevata da `org/conscrypt/conscrypt.properties` nell'AAR effettivamente risolto. |
-| Bouncy Castle `bcprov`, `bcpkix`, `bcutil` jdk15to18, 1.81 | The Legion of the Bouncy Castle Inc. | [Licenza permissiva Bouncy Castle](vendor/licenses/BouncyCastle-LICENSE), estratta dall'artefatto `bcprov` risolto. |
-| AndroidX, Compose e Material 3 | The Android Open Source Project e contributori AndroidX | Apache-2.0 secondo i POM risolti. [Testo completo](vendor/libadb/LICENSES/Apache-2.0). Le versioni di ogni modulo sono nel [lock dell'app](app/gradle.lockfile). Principali: Activity 1.10.1, Lifecycle 2.8.7, Compose UI 1.7.8, Material 3 1.3.2. |
-| Kotlin stdlib 2.2.10, kotlinx-coroutines 1.10.2, JetBrains annotations 23.0.0 | JetBrains e contributori | Apache-2.0 secondo i POM risolti; [testo](vendor/libadb/LICENSES/Apache-2.0). |
-| Guava ListenableFuture 1.0 | Google e contributori Guava | Apache-2.0; [sorgente originale](https://github.com/google/guava), [testo](vendor/libadb/LICENSES/Apache-2.0). |
+| LibADB Android 3.1.1, with local changes | Muntashir Al-Islam; authors named in individual file headers | Apache-2.0 selected for dual GPL-3.0-or-later / Apache-2.0 files; other BSD/MIT headers retained. [COPYING](vendor/libadb/COPYING), [Apache text](vendor/libadb/LICENSES/Apache-2.0), [local changes](vendor/libadb/LOCAL_CHANGES.md), complete module source. |
+| SPAKE2 Android 2.2.1 | Copyright 2021 Muntashir Al-Islam | [LGPL-3.0](vendor/spake2-source/COPYING.LESSER), incorporating [GPL-3.0](vendor/spake2-source/COPYING); [exact source, submodule and rebuild recipe](vendor/spake2-source/README.md). |
+| SPAKE2-C, commit `0d15933e5ba3e662cb01245a7ac0dc9fca3eac31` | Google Inc., Muntashir Al-Islam, Free Software Foundation and authors named in headers | Project LGPL-3.0; `spake2.c` retains its permissive ISC license; glibc-derived `sha512.c`/headers declare LGPL-2.1-or-later. Original texts and attribution remain in the included submodule archive. |
+| Conscrypt Android 2.5.3 | The Android Open Source Project and Conscrypt contributors; Apache Harmony and Netty portions | [Apache-2.0](vendor/licenses/Conscrypt-LICENSE), [original NOTICE](vendor/licenses/Conscrypt-NOTICE). Its embedded BoringSSL portions have the separate terms below. |
+| BoringSSL embedded by Conscrypt, commit `49f0329110a1d93a5febc2bceceedc655d995420` | OpenSSL Project, Eric Young, Google and individual authors | [Complete license](vendor/licenses/BoringSSL-LICENSE): original OpenSSL/SSLeay, ISC and MIT terms for the identified portions. Revision recorded from `org/conscrypt/conscrypt.properties` in the resolved AAR. |
+| Bouncy Castle `bcprov`, `bcpkix`, `bcutil` jdk15to18, 1.81 | The Legion of the Bouncy Castle Inc. | [Bouncy Castle license](vendor/licenses/BouncyCastle-LICENSE), preserved from the resolved `bcprov` artifact. |
+| AndroidX, Compose and Material 3 | The Android Open Source Project and AndroidX contributors | Apache-2.0 according to the resolved POMs; [complete text](vendor/libadb/LICENSES/Apache-2.0). Every module version is recorded in the [app lock](app/gradle.lockfile). Main versions: Activity 1.10.1, Lifecycle 2.8.7, Compose UI 1.7.8, Material 3 1.3.2. |
+| Kotlin stdlib 2.2.10, kotlinx-coroutines 1.10.2, JetBrains annotations 23.0.0 | JetBrains and contributors | Apache-2.0 according to resolved POMs; [complete text](vendor/libadb/LICENSES/Apache-2.0). |
+| Guava ListenableFuture 1.0 | Google and Guava contributors | Apache-2.0; [upstream](https://github.com/google/guava), [complete text](vendor/libadb/LICENSES/Apache-2.0). |
 
-L'archivio completo SPAKE2-Java conserva anche la variante Java non impiegata dal backend Android nativo, con attribuzioni EdDSA-Java/CC0. La presenza di quei sorgenti non significa che tutte le varianti siano collegate nell'APK. Dipendenze di test come JUnit ed Espresso e strumenti di build restano separati dal runtime della release; il lock distingue le configurazioni.
+The complete SPAKE2-Java archive also preserves the unused Java variant with EdDSA-Java/CC0 attribution. Including its source does not mean every variant is linked into the APK. JUnit, Espresso and other test/build tools are separate from the release runtime; dependency locks distinguish configurations.
 
-## Distribuzione e possibilità di modifica
+## Required acknowledgments
 
-SPAKE2 è una libreria LGPL inclusa nell'app. Accompagno l'APK con questo avviso, i testi LGPL/GPL, gli archivi dei sorgenti corrispondenti, il sorgente dell'app e gli script necessari a ricombinare l'app con una versione modificata della libreria. Non impongo restrizioni alla modifica delle porzioni LGPL né al reverse engineering necessario a verificarne le modifiche. L'app non controlla una firma obbligatoria per bloccare una libreria sostitutiva.
+This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/).
 
-La procedura concreta è in [vendor/spake2-source/README.md](vendor/spake2-source/README.md). Il flag `-Pspake2Aar=/percorso/libreria.aar` sostituisce intenzionalmente la dipendenza Maven nel modulo LibADB; senza flag, la build usa ancora l'AAR originale 2.2.1. I lock della copia modificata devono essere aggiornati. Una propria firma consente l'installazione dopo aver disinstallato la precedente build; l'associazione va ripetuta e la configurazione sul TV va verificata prima di cancellare dati locali. Le chiavi di firma e ADB originali non devono essere distribuite.
+This product includes cryptographic software written by Eric Young (eay@cryptsoft.com). This product includes software written by Tim Hudson (tjh@cryptsoft.com).
 
-Se l'APK viene trasferito a un altro destinatario, trasferire anche questa documentazione e l'archivio sorgente completo della medesima revisione, comprese `vendor/libadb`, `vendor/spake2-source` e `vendor/licenses`. Non sostituire il sorgente corrispondente con un collegamento generico a `master`; preservare checksum, copyright e licenze. Conservare le attribuzioni e i testi delle licenze permissive anche nella distribuzione binaria.
+These are upstream attribution statements, not endorsements of this app. The full conditions and disclaimers accompany them in [BoringSSL-LICENSE](vendor/licenses/BoringSSL-LICENSE).
 
-La sintassi e l'estrazione della ricetta alternativa SPAKE2 sono state controllate; non attribuisco alla libreria ricompilata le prove del binario upstream. L'esito della build normale e la corrispondenza dell'APK restano nel rapporto di qualità della release.
+## Distribution and modification
 
-## Fonti verificate
+The original OpenSSL/SSLeay conditions in this pinned BoringSSL version require separate consideration from Apache/GPLv3 compatibility. The original-code copyright holder grants only the explicit [section 7 linking permission](LICENSE-ADDITIONAL-PERMISSION) for the Conscrypt/BoringSSL combination; this does not claim the upstream licenses themselves have become GPL-compatible or been changed. See the GNU discussion of [GPL-incompatible libraries](https://www.gnu.org/licenses/gpl-faq.html#GPLIncompatibleLibs).
 
-Consultazione del 24 ottobre 2026: [LibADB 3.1.1](https://github.com/MuntashirAkon/libadb-android/tree/3.1.1), [SPAKE2-Java 2.2.1](https://github.com/MuntashirAkon/spake2-java/tree/2.2.1), [SPAKE2-C alla revisione indicata](https://github.com/MuntashirAkon/spake2-c/tree/0d15933e5ba3e662cb01245a7ac0dc9fca3eac31), [Conscrypt 2.5.3](https://github.com/google/conscrypt/tree/2.5.3) e [BoringSSL alla revisione dell'AAR](https://boringssl.googlesource.com/boringssl/+/49f0329110a1d93a5febc2bceceedc655d995420/LICENSE). I POM e gli artefatti effettivamente risolti integrano queste fonti per le dipendenze transitive; hash e ABI dei componenti crittografici sono nel [dossier trasporto](research/decisions/TRANSPORT.md).
+SPAKE2 remains an LGPL library. I accompany the APK with its notice, GPL/LGPL texts, exact source archives, application source and scripts needed to recombine the app with a modified library. I impose no restriction on modifying LGPL portions or reverse engineering necessary to debug such modifications. The app does not require a particular application signature to block a replacement library.
+
+The concrete procedure is in [vendor/spake2-source/README.md](vendor/spake2-source/README.md). `-Pspake2Aar=/path/to/library.aar` intentionally replaces the Maven library in the LibADB module; without it, the build uses upstream AAR 2.2.1. Update locks in the modified source copy. A personal signing key allows installation after uninstalling a differently signed app, which requires pairing again. Check the TV configuration and recover any pending operation before clearing local data. Original signing/ADB private keys are not distributable source.
+
+When conveying an APK, also provide these notices and complete corresponding source for the same revision, including `vendor/libadb`, `vendor/spake2-source`, `vendor/licenses`, build scripts, and the exact linked dependency-source supplement supplied with the release. Preserve all copyright/license texts and checksums; a generic link to `master` is insufficient. Retain permissive-license acknowledgments in binary distributions as well.
+
+The alternate SPAKE2 recipe's syntax and source extraction were historically checked; that is not a claim that a rebuilt native library passed the upstream binary's tests. Current build/verification results belong to the [publication record](docs/PUBLICATION.md).
+
+## Sources and artifact identity
+
+[LibADB 3.1.1](https://github.com/MuntashirAkon/libadb-android/tree/3.1.1), [SPAKE2-Java 2.2.1](https://github.com/MuntashirAkon/spake2-java/tree/2.2.1), [SPAKE2-C exact revision](https://github.com/MuntashirAkon/spake2-c/tree/0d15933e5ba3e662cb01245a7ac0dc9fca3eac31), [Conscrypt 2.5.3](https://github.com/google/conscrypt/tree/2.5.3), and [BoringSSL license at the embedded revision](https://boringssl.googlesource.com/boringssl/+/49f0329110a1d93a5febc2bceceedc655d995420/LICENSE) support the recorded provenance. Resolved POMs and artifact hashes supplement these sources for transitive dependencies. Initial provenance inspection: 24 October 2026.
+
+| Resolved AAR | SHA-256 |
+| --- | --- |
+| `spake2-android-2.2.1.aar` | `8798fb6c04b5d53a6307ed9481e9afe563227abd4e8b9e917c8514fa850071bb` |
+| `conscrypt-android-2.5.3.aar` | `551ae4e301c571760d1791e647db6ed1dcb10d34dcae7aa12b67f220f2ce98d1` |

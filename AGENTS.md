@@ -1,65 +1,67 @@
 # Governance
 
-## Autorità e proprietà
+## Authority and ownership
 
-Rispettare le istruzioni della piattaforma, il mandato corrente dell'utente e le autorizzazioni già concesse. Le istruzioni di progetto sono autosufficienti e non richiedono documenti personali.
+Follow platform instructions, the current user mandate and existing authorizations. Public project instructions are self-contained; no personal workspace is required.
 
-Un concetto ha un solo proprietario: `START.md` governa il bootstrap/resume; questo file la governance; `ROADMAP.md` fasi e gate; `CORROBORATIONS.md` il routing delle fonti esterne. I requisiti di prodotto appartengono a `docs/PRODUCT_SPEC.md`, il comportamento tecnico a `docs/COMMAND_CONTRACT.md`. Gli altri artefatti li richiamano senza creare copie concorrenti.
+Each concept has one owner: `START.md` owns bootstrap/resume; this file owns governance; `ROADMAP.md` owns phases and gates; `CORROBORATIONS.md` routes external sources. Product requirements belong to `docs/PRODUCT_SPEC.md`; technical behavior belongs to `docs/COMMAND_CONTRACT.md`. Other artifacts refer to these without creating competing copies.
 
-I quattro file canonici sono **read-only per ogni agente dopo la conclusione del bootstrap iniziale**. Sono modificabili dall'utente o con sua delega esplicita e specifica nella conversazione corrente. Il mandato generale di sviluppo non equivale a tale delega. Proporre una modifica necessaria prima di applicarla:
+The four canonical files are **read-only for agents after initial bootstrap**, except under explicit, specific delegation in the current conversation. A general development mandate is insufficient. The October 2026 localization/publication mandate delegates only the new phase, public English documentation, public/private paths and alignment with that mandate and available evidence. For changes beyond an existing delegation, propose:
 
 ```text
 HUMAN_REQUIRED
 GATE=CANONICAL_FILE_CHANGE_APPROVAL
 FILES=<file>
-REASON=<necessità>
+REASON=<need>
 PROPOSED_CHANGE=<delta>
-IMPACT=<effetto>
+IMPACT=<effect>
 ```
 
-Le cache JSON sono non autoritative: Git, deliverable e prove prevalgono; correggere la cache in caso di conflitto. Gli artefatti non protetti possono evolvere entro il mandato senza gate aggiuntivi.
+JSON caches are non-authoritative. Git, deliverables and evidence take precedence; correct conflicting caches. Unprotected artifacts may evolve within the mandate without extra gates.
 
-## Metodo e orchestrazione
+## Method and coordination
 
-Usare la soluzione minima sufficiente, reversibile e verificabile. Caricare contesto mirato, riusare evidenze valide e comunicare i delta. Non creare documenti, astrazioni, gate o test per mera completezza.
+Use the smallest sufficient, reversible and verifiable solution. Load focused context, reuse valid evidence and communicate changes. Do not add documents, abstractions, gates or tests merely for completeness.
 
-AI PM coordina Investigator/Executor e Reviewer indipendente quando la separazione migliora il lavoro. I subagent sono implicitamente autorizzati, ricevono scope e limiti del progetto e non possono ampliarli. Assegnare file o worktree distinti; integrare e verificare il lavoro delegato. La revisione indipendente deve controllare i rischi concreti, non ripetere meccanicamente ogni verifica.
+The AI PM coordinates Investigator/Executor and independent Reviewer roles when separation improves the work. Subagents are authorized within the project scope and must not expand it. Assign distinct files or worktrees; integrate and verify delegated work. Independent review addresses concrete risks rather than repeating every check mechanically.
 
-Classificare le affermazioni come `OBSERVED`, `INFERRED`, `PROVEN` o `ASSUMED`, specificando fonte e ambito. Una prova riferita dall'utente resta attribuita all'utente. Per root cause materiali registrare `EVIDENCE_FOR`, `EVIDENCE_AGAINST`, `ALTERNATIVE_EXPLANATIONS`, `CONFIDENCE` e `MINIMAL_DISCRIMINATING_EXPERIMENT`. Conservare decisioni e risultati, non diari del ragionamento.
+Classify claims as `OBSERVED`, `INFERRED`, `PROVEN` or `ASSUMED`, with source and scope. User-reported physical results remain attributed to the user. For material root causes record `EVIDENCE_FOR`, `EVIDENCE_AGAINST`, `ALTERNATIVE_EXPLANATIONS`, `CONFIDENCE` and `MINIMAL_DISCRIMINATING_EXPERIMENT`. Preserve decisions and results, not reasoning diaries.
 
-## Autonomia e Human Gate
+## Autonomy and human dependencies
 
-Lavorare autonomamente su codice, documenti non protetti, dipendenze locali al progetto, build, emulatori, test, commit e normali push nel repository indicato. Conservare il lavoro altrui e non riscrivere la cronologia condivisa. Controllare le autorizzazioni della sessione prima di richiederle di nuovo.
+Work autonomously on code, unprotected documents, project-local dependencies, builds, emulators, tests, commits and ordinary pushes within the designated repository. Preserve others' work and do not rewrite shared history. Check current authorization before asking again.
 
-Un Human Gate serve soltanto a una decisione, un accesso o un'azione umana realmente necessari: associazione fisica, operazione live non già autorizzata, ampliamento dello scope, cambiamento dei canonici, modifica distruttiva, credenziali o pubblicazione sensibile non già autorizzata. Completare prima tutto il lavoro indipendente e preparare un risultato concretamente verificabile. Una milestone o la creazione di un subagent non richiedono approvazione.
+The accepted publication mandate also authorizes new non-colliding tags and GitHub releases in this repository using available access. It does **not** authorize changing repository visibility, overwriting releases/tags, force pushes, or collecting private device data.
 
-Ogni richiesta deve identificare il vincolo e contenere:
+A human gate is only for a genuinely necessary decision, access or action: physical pairing, an unauthorized live operation, scope expansion, undelegated canonical changes, destructive changes, missing credentials or sensitive publication not already authorized. Complete independent work first and prepare a concrete result. Milestones and subagent creation do not require approval.
+
+A necessary request identifies the constraint and includes:
 
 ```text
 PURPOSE=
 EXPECTED_RESULT=
-COMMANDS=<comandi esatti o azioni UI>
+COMMANDS=<exact commands or UI actions>
 RISK=
 ROLLBACK=
 EVIDENCE_TO_RETURN=
 ```
 
-## Sicurezza e qualità
+## Safety and quality
 
-Usare solo risorse e dispositivi autorizzati. Verificare il destinatario prima di operazioni mutanti. In caso di identità, permessi o risultati incerti, interrompere le scritture e rappresentare l'incertezza; non dichiarare successo. Prima di modificare sistemi reali predisporre lettura dello stato e recupero pertinente, senza esportare dati superflui.
+Use only authorized resources and devices. Verify the recipient before mutations. If identity, permission or results are uncertain, stop writes and state the uncertainty; do not claim success. Before changing real systems, prepare pertinent state inspection and recovery without exporting unnecessary data.
 
-Preferire toolchain e dipendenze isolate al progetto. Modifiche allo stock dell'host richiedono necessità documentata, autorizzazione pertinente e rollback. Non introdurre workaround che aggirino controlli di accesso o permessi.
+Prefer project-isolated tools and dependencies. Host changes require documented necessity, applicable authorization and rollback. Do not bypass access controls or permissions.
 
-Escludere da Git e log credenziali, codici di associazione, chiavi private, keystore di firma, token, indirizzi e identificativi personali non necessari. Sanitizzare le evidenze; conservare solo i dati indispensabili al risultato. Non caricare backup o dati reali su servizi esterni senza autorizzazione.
+Keep credentials, pairing codes, private keys, signing keystores, tokens and unnecessary personal addresses/identifiers out of Git and logs. Keep private local material under `development/`, sanitize public evidence, and do not upload backups or real data externally without authorization. Preserve existing signing keys. A private file moved out of the current tree may remain in history: inspect publication-bound history and report unresolved exposure without rewriting it automatically.
 
-I test devono verificare contratti e rischi materiali. Usare prove sintetiche internamente, mantenendo distinta la validazione reale. Non falsificare esiti, screenshot, benchmark o compatibilità. Ripetere i controlli solo per cambiamenti pertinenti, rischio residuo o gate obbligatorio. Fissare versioni riproducibili, verificare licenze e distinguere compatibilità dichiarata, testata e non verificata.
+Tests cover contracts and material risks. Distinguish synthetic checks from real validation. Never fabricate results, screenshots, benchmarks or compatibility. Repeat checks only for relevant changes, residual risk or required gates. Pin reproducible versions, verify licenses and distinguish declared, tested and unverified compatibility. Language-only changes require focused regression checks, not an invented new physical acceptance campaign.
 
-## Igiene e condizioni terminali
+## Hygiene and terminal conditions
 
-Prosa e documentazione in italiano; identificatori, path, API e stati in inglese. Documentazione personale in prima persona singolare quando serve un soggetto autoriale. Committare soltanto materiali necessari, mantenere i link e l'indice coerenti e preservare la visibilità del repository.
+Public documentation and release notes are in English; user-facing status reports may be in Italian. Identifiers, paths, APIs and states remain in English. Use first-person singular when an authorial voice is needed. Commit only necessary material, maintain links/indexes, retain third-party license texts and preserve repository visibility.
 
-- `MILESTONE_COMPLETE`: il risultato terminale della roadmap è provato; non si applica ai checkpoint intermedi.
-- `HUMAN_REQUIRED`: resta una specifica dipendenza umana, con tutto il lavoro autonomamente eseguibile completato e una richiesta pronta.
-- `BLOCKED`: nessun passo utile resta possibile entro i limiti correnti; documentare tentativi, evidenze e sblocco minimo.
+- `MILESTONE_COMPLETE`: the roadmap's terminal outcome is proved, not an intermediate checkpoint.
+- `HUMAN_REQUIRED`: a specific human dependency remains after all autonomous work is complete, with an actionable request prepared.
+- `BLOCKED`: no useful step remains within scope; document attempts, evidence and minimum unblock.
 
-Una pausa, un'interruzione o un limite della piattaforma non equivalgono a successo: salvare lo stato ricostruibile e mantenere il requisito aperto.
+A pause, interruption or platform limit is not success. Save reconstructible state and leave unmet requirements open.

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Original app code; see LICENSE and LICENSE-ADDITIONAL-PERMISSION.
 package it.sorguido.chromecastkillswitch.transport
 
 import android.content.Context
@@ -12,9 +14,9 @@ import java.util.UUID
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-enum class TransportReason { GUID_MISMATCH, PAIRING_FAILED, NOT_PAIRED, CONNECTION_FAILED, IDENTITY_STORAGE }
+enum class TransportReason { GUID_MISMATCH, PAIRING_FAILED, NOT_PAIRED, CONNECTION_FAILED, NETWORK_DENIED, IDENTITY_STORAGE }
 
-/** Messages are fixed Italian strings; never attach upstream exceptions or wire data. */
+/** Diagnostic messages never include upstream exceptions or wire data. UI uses reason only. */
 class TransportException(val reason: TransportReason, message: String) : IOException(message)
 
 /** Blocking API: invoke only from the controller's serial IO worker. Never logs wire data. */
@@ -72,7 +74,7 @@ class AdbTransport(private val context: Context) {
             pairing.start()
             retainGuid(pairing.peerGuid)
         } catch (failure: TransportException) { throw failure }
-        catch (_: SecurityException) { throw TransportException(TransportReason.CONNECTION_FAILED,
+        catch (_: SecurityException) { throw TransportException(TransportReason.NETWORK_DENIED,
             "Accesso alla rete negato. Controlla i permessi dell’app nelle impostazioni del telefono.") }
         catch (_: Exception) { throw TransportException(TransportReason.PAIRING_FAILED,
             "Associazione rifiutata, scaduta o non raggiungibile. Apri un nuovo codice sul TV e verifica la porta di associazione.") }
@@ -93,7 +95,7 @@ class AdbTransport(private val context: Context) {
                 .setApi(34) // Target daemon: Chromecast Android 14, independent of this phone's API.
                 .setPrivateKey(identity.key).setCertificate(identity.certificate)
                 .setDeviceName("ChromecastKillSwitch").build()
-        } catch (_: SecurityException) { throw TransportException(TransportReason.CONNECTION_FAILED,
+        } catch (_: SecurityException) { throw TransportException(TransportReason.NETWORK_DENIED,
             "Accesso alla rete negato. Controlla i permessi dell’app nelle impostazioni del telefono.") }
         catch (_: Exception) { throw TransportException(TransportReason.CONNECTION_FAILED,
             "Collegamento non raggiungibile. Verifica rete locale, Debug wireless e porta corrente sul TV.") }

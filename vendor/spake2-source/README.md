@@ -1,27 +1,30 @@
-# Sorgente corrispondente SPAKE2
+# SPAKE2 corresponding source
 
-Conservo due archivi upstream non modificati, per complessivi circa 124 KiB:
+I preserve two unmodified upstream archives, approximately 124 KiB in total:
 
 - [SPAKE2-Java, tag 2.2.1](https://github.com/MuntashirAkon/spake2-java/tree/2.2.1): `spake2-java-2.2.1.tar.gz`.
-- [Submodule SPAKE2-C, commit 0d15933e5ba3e662cb01245a7ac0dc9fca3eac31](https://github.com/MuntashirAkon/spake2-c/tree/0d15933e5ba3e662cb01245a7ac0dc9fca3eac31): `spake2-c-0d15933.tar.gz`. Questo SHA è il gitlink del tag Java; il solo archivio GitHub Java non include i sorgenti del submodule.
+- [SPAKE2-C submodule, commit 0d15933e5ba3e662cb01245a7ac0dc9fca3eac31](https://github.com/MuntashirAkon/spake2-c/tree/0d15933e5ba3e662cb01245a7ac0dc9fca3eac31): `spake2-c-0d15933.tar.gz`. This is the Java tag's gitlink; GitHub's Java archive alone omits submodule source.
 
-[SHA256SUMS](SHA256SUMS) verifica i byte degli archivi. Ogni archivio include le attribuzioni nei sorgenti e la licenza originale. Le copie leggibili della [LGPL-3.0](COPYING.LESSER) e della [GPL-3.0](COPYING) accompagnano la distribuzione. Copyright 2021 Muntashir Al-Islam; le parti derivate mantengono i rispettivi autori, incluso il codice BoringSSL/Google presente nel submodule e i file EdDSA/CC0 della variante Java.
+[SHA256SUMS](SHA256SUMS) verifies the archive bytes. Each archive preserves source attribution and original licenses. Readable [LGPL-3.0](COPYING.LESSER) and [GPL-3.0](COPYING) copies accompany distribution. Copyright 2021 Muntashir Al-Islam; derived portions retain their authors, including BoringSSL/Google code in the submodule and EdDSA/CC0 files in the Java variant.
 
-Il tag richiesto è `2.2.1`, anche se la variabile `version` nel file Gradle upstream reca ancora `2.2.0`. Non la uso per identificare l'artefatto risolto: coordinate JitPack, tag, SHA del submodule e hash dell'AAR sono registrati nel [dossier trasporto](../../research/decisions/TRANSPORT.md).
+The resolved tag is `2.2.1` although the upstream Gradle `version` variable still says `2.2.0`. Artifact coordinates, exact submodule revision and [recorded AAR hash](../../THIRD_PARTY_NOTICES.md#sources-and-artifact-identity) identify the source used, not that stale version variable.
 
-## Estrarre, modificare e ricompilare
+## Extract, modify and rebuild
 
-`bash vendor/spake2-source/rebuild.sh --prepare-only` verifica i checksum ed estrae entrambi gli archivi in `.local/spake2-rebuild`. La copia di lavoro include tutti i sorgenti e può essere modificata. Richiamare lo script non sovrascrive una copia già preparata.
+`bash vendor/spake2-source/rebuild.sh --prepare-only` verifies checksums and extracts both archives under `development/local/spake2-rebuild`. The resulting working copy contains all source and may be edited. Running the script again does not overwrite a prepared copy.
 
-Lo script sostituisce esclusivamente la configurazione Gradle nella copia di lavoro: usa Gradle dell'app, AGP 9.4.0, Java 17, compile SDK/build tools 36, min SDK 26, NDK `27.2.12479018`, CMake `3.22.1` e allineamento massimo pagina 16384. La crittografia resta nei sorgenti estratti. Occorrono SDK, NDK e CMake indicati; `ANDROID_HOME` punta allo SDK scelto. La sintassi e l'estrazione sono verificate; la compilazione nativa di questa ricetta alternativa resta non eseguita finché manca la toolchain NDK/CMake. L'AAR usato e qualificato nella build normale resta quello originale JitPack 2.2.1.
+Only the extracted copy's Gradle configuration is replaced: it uses this app's Gradle wrapper, AGP 9.4.0, Java 17 bytecode, SDK/Build Tools 36, minimum API 26, NDK `27.2.12479018`, CMake `3.22.1`, and maximum page alignment 16384. Cryptographic code remains in the extracted source. Install those SDK/NDK/CMake components in your own SDK and set `ANDROID_HOME` accordingly.
+
+Syntax and extraction were historically checked. The alternative native rebuild is not claimed as tested without those tools and an actual run; the normal app build uses the original JitPack AAR 2.2.1.
 
 ```bash
 bash vendor/spake2-source/rebuild.sh
-./gradlew :app:assembleRelease \
-  -Pspake2Aar="$PWD/.local/spake2-rebuild/android/build/outputs/aar/android-release.aar" \
+GRADLE_USER_HOME="$PWD/development/local/gradle" ./gradlew :app:assembleRelease \
+  --project-cache-dir development/gradle-project \
+  -Pspake2Aar="$PWD/development/local/spake2-rebuild/android/build/outputs/aar/android-release.aar" \
   --write-locks
 ```
 
-Il secondo comando ricombina l'app con la libreria modificata; `--write-locks` aggiorna la copia locale dei lock per la sostituzione intenzionale. Configurare una propria firma secondo la guida di build del progetto. Le chiavi private della release originale non fanno parte del sorgente necessario per installare una propria build: si può disinstallare la precedente app e installare l'APK firmato personalmente. Questo cancella associazione e stato locale; verificare prima sul TV la configurazione e completare eventuali recuperi pendenti, quindi effettuare una nuova associazione. Non occorre una modifica al firmware della Chromecast.
+The second command recombines the app with the modified library. `--write-locks` updates the local copy's dependency locks for that intentional replacement. Configure your own signing key following [BUILD.md](../../docs/BUILD.md). Original release private keys are unnecessary for installing a personally signed build: uninstall the differently signed previous app first, after checking/recovering its TV configuration. Uninstallation clears local pairing and pending state; pair again afterward. No Chromecast firmware modification is required.
 
-La sostituzione mantiene l'interfaccia Java/JNI prevista da LibADB. Una libreria modificata richiede nuovi test e non eredita le prove della release originale.
+A replacement preserves the Java/JNI interface expected by LibADB. A modified library needs its own tests and does not inherit the original release's qualification.

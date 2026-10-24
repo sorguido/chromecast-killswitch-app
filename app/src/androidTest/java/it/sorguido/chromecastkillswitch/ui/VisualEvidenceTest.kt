@@ -1,9 +1,12 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Original app code; see LICENSE and LICENSE-ADDITIONAL-PERMISSION.
 package it.sorguido.chromecastkillswitch.ui
 
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.SystemClock
 import android.view.Choreographer
+import it.sorguido.chromecastkillswitch.R
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.test.assertIsDisplayed
@@ -13,6 +16,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.test.platform.app.InstrumentationRegistry
 import java.io.File
+import java.util.Locale
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import org.junit.Assert.assertTrue
@@ -29,16 +33,16 @@ class VisualEvidenceTest {
 
     private val syntheticReady = UiState(
         targetName = "Chromecast di test",
-        connection = "Collegata · dati sintetici",
-        configuration = "Configurazione ON",
-        detail = "Always-on e kill switch di Android configurati per Proton VPN.",
-        lastRead = "12:30 · scenario sintetico",
+        connection = UiText(R.string.connection_identified),
+        configuration = UiText(R.string.configuration_on),
+        detail = UiText(R.string.result_read),
+        lastRead = 1_700_000_000_000L,
         paired = true,
         canOperate = true,
     )
     private val noNetworkActions = UiActions({}, {}, { _, _, _ -> }, { _, _ -> }, {})
 
-    private fun render(state: UiState, dark: Boolean = false) {
+    private fun render(state: UiState, dark: Boolean = false, locale: Locale = Locale.ITALIAN) {
         compose.setContent {
             val configuration = Configuration(LocalConfiguration.current).apply {
                 uiMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or
@@ -47,7 +51,7 @@ class VisualEvidenceTest {
             CompositionLocalProvider(
                 LocalConfiguration provides configuration,
             ) {
-                KillSwitchApp(state, noNetworkActions)
+                LocalizedContent(locale) { KillSwitchApp(state, noNetworkActions) }
             }
         }
     }
@@ -106,11 +110,11 @@ class VisualEvidenceTest {
 
     @Test fun capturePartialAndConnectionError() {
         render(syntheticReady.copy(
-            connection = "Non raggiungibile · scenario sintetico",
-            configuration = "Da verificare",
-            detail = "Ultima lettura: configurazione parziale. Lo stato attuale richiede una nuova verifica.",
+            connection = UiText(R.string.connection_unverified),
+            configuration = UiText(R.string.configuration_unverified),
+            detail = UiText(R.string.detail_recovery),
             canOperate = false,
-            error = "Collegamento perso. Controlla rete e Debug wireless sul televisore, poi rileggi lo stato.",
+            error = UiText(R.string.connection_failed),
         ))
         compose.onNodeWithText("Da verificare").assertIsDisplayed()
         capture("connection-error-stale-partial")
@@ -120,8 +124,8 @@ class VisualEvidenceTest {
 
     @Test fun captureCurrentPartial() {
         render(syntheticReady.copy(
-            configuration = "Configurazione parziale",
-            detail = "Always-on Proton selezionata; kill switch disattivato. Non è una configurazione OFF completa.",
+            configuration = UiText(R.string.configuration_partial),
+            detail = UiText(R.string.result_read),
         ))
         compose.onNodeWithText("Configurazione parziale").assertIsDisplayed()
         capture("home-partial-light")
@@ -135,4 +139,36 @@ class VisualEvidenceTest {
         compose.onNodeWithText("Conferma").performScrollTo().assertIsDisplayed()
         capture("off-dialog-font200-actions")
     }
+    @Test fun captureEnglishHomeLight() {
+        render(syntheticReady, locale = Locale.ENGLISH)
+        compose.onNodeWithText("ON configuration").assertIsDisplayed()
+        capture("home-on-light-en")
+    }
+
+    @Test fun captureEnglishHomeDark() {
+        render(syntheticReady, dark = true, locale = Locale.ENGLISH)
+        compose.onNodeWithText("ON configuration").assertIsDisplayed()
+        capture("home-on-dark-en")
+    }
+
+    @Test fun captureEnglishErrorAndOfflineGuide() {
+        render(syntheticReady.copy(canOperate = false, error = UiText(R.string.failure_readback)), locale = Locale.ENGLISH)
+        compose.onNodeWithText("A check is needed").performScrollTo().assertIsDisplayed()
+        capture("readback-error-en")
+        compose.onNodeWithText("Open the recovery guide").performScrollTo().performClick()
+        compose.onNodeWithText("One Chromecast").assertIsDisplayed()
+        capture("help-top-en")
+        compose.onNodeWithText("USB recovery from a PC").performScrollTo().assertIsDisplayed()
+        capture("help-usb-en")
+    }
+
+    @Test fun captureEnglishOffConfirmationAtDoubleFontSize() = withEmulatorFontScale(2f) {
+        render(syntheticReady, dark = true, locale = Locale.ENGLISH)
+        compose.onNodeWithText("Disable and reboot").performScrollTo().performClick()
+        compose.onNodeWithText("Disable and reboot?").assertIsDisplayed()
+        capture("off-dialog-font200-dark-en-top")
+        compose.onNodeWithText("Confirm").performScrollTo().assertIsDisplayed()
+        capture("off-dialog-font200-dark-en-actions")
+    }
+
 }

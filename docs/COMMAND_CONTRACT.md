@@ -1,14 +1,18 @@
-# Contratto operativo ADB e VPN
+# ADB and VPN operation contract
 
-Questo documento possiede comandi, interpretazione dei risultati e sequenza operativa. I requisiti di prodotto e le schermate appartengono a [PRODUCT_SPEC.md](PRODUCT_SPEC.md); i gate a [ROADMAP.md](../ROADMAP.md). Le basi esterne sono nel dossier [C3](../research/corroborations/C3.md).
+This document owns commands, interpretation and sequencing. [PRODUCT_SPEC.md](PRODUCT_SPEC.md) owns product/UI requirements and [ROADMAP.md](../ROADMAP.md) owns delivery gates. Public primary references are routed through [CORROBORATIONS.md](../CORROBORATIONS.md).
 
-## Target e preflight
+## Target and preflight
 
-Prima versione: Chromecast HD, product/device `boreal`, Android 14 (API 34), utente Android `0`, Proton `ch.protonvpn.android`. Modello e versione sono una baseline di supporto, non l'identità univoca del dispositivo.
+Supported target: Chromecast with Google TV HD, product/device `boreal`, Android 14/API 34, Android user `0`, Proton package `ch.protonvpn.android`. Model/firmware identify the supported profile, not a unique device.
 
-Il telefono possiede le proprie credenziali ADB. La prima associazione avviene tramite codice mostrato dalla Chromecast; il PC già autorizzato non trasferisce la propria identità. Conservare in storage privato le credenziali e il riferimento al dispositivo associato, con esclusione dai backup esportabili non protetti. Reinstallazione, cancellazione dei dati o revoca possono richiedere un nuovo pairing.
+The phone generates and stores its own ADB credentials in private, backup-excluded storage. Pairing uses the code shown by the Chromecast; no PC identity is copied. Reinstallation, clearing app data or authorization revocation may require pairing again. Corrupt identity storage must not silently generate a replacement identity.
 
-Usare `_adb-tls-pairing._tcp` per l'associazione e `_adb-tls-connect._tcp` per la connessione. IP, porta e nomi mDNS sono endpoint da risolvere: non valgono da soli come autenticazione. Non selezionare automaticamente il primo dispositivo trovato. Dopo la connessione autenticata controllare l'identità salvata e gli attributi disponibili, poi eseguire le letture di preflight:
+Discover `_adb-tls-pairing._tcp` for pairing and `_adb-tls-connect._tcp` for connection. IP, port and mDNS names are endpoints, not authentication. Never automatically select the first discovered device. The authenticated PAKE GUID is stored privately; its AOSP device serial is checked against `ro.serialno` on every connection. Unsupported GUID formats, unreadable/mismatched serials or an unrelated saved identity block access.
+
+The upstream TLS client accepts server certificates without a trusted server identity. PAKE authenticates pairing and the authorized key authenticates the phone to adbd, but shell identity checks do not establish strong server authentication against an active LAN attacker. Use a trusted LAN, do not expose ADB to the Internet, and do not claim MITM resistance. See [local transport changes](../vendor/libadb/LOCAL_CHANGES.md).
+
+After identity checks, read preflight state with fixed remote-shell commands:
 
 ```sh
 getprop ro.product.model
@@ -22,40 +26,36 @@ settings --user 0 get secure always_on_vpn_lockdown
 settings --user 0 get secure always_on_vpn_lockdown_whitelist
 ```
 
-Sono comandi della shell remota: il client Android deve aprire il canale ADB, non cercare il binario del PC o usare il suo percorso SDK. Impostare gli eventuali parametri della libreria relativi alla versione del daemon secondo il target, non automaticamente secondo l'Android del telefono.
+The Android app opens ADB services directly; it does not invoke a PC binary. Remote daemon API parameters follow the supported TV, not the phone OS. Unconfirmed identity, unsupported target, another Android user, absent Proton, another always-on provider or unexpected whitelist entries block writes with a clear result. The supported baseline has no whitelist exceptions; do not overwrite unrelated configuration.
 
-Identità non confermata, target fuori supporto, utente diverso, Proton assente, sempre-attiva assegnata a un altro provider o eccezioni inattese devono produrre un esito esplicito prima di qualsiasi scrittura. Per la baseline concordata la whitelist è assente: non importare, sovrascrivere o cancellare configurazioni estranee senza una decisione pertinente.
+## Read state
 
-## Lettura e stato
+Keep connection status, persistent values and operation progress separate. Accept `null` only from a successful framed read. Empty/truncated output, timeout or command failure does not mean an absent setting.
 
-Conservare distinti stato del collegamento, valori persistenti e avanzamento dell'operazione. Accettare `null` solo da una lettura riuscita; una stringa vuota, un timeout, un errore o una risposta troncata non significano impostazione assente.
+| Successful read for user 0 | Meaning |
+| --- | --- |
+| Proton app, lockdown `1`, no exceptions | System configuration ON |
+| App `null`, lockdown `null` or `0`, whitelist absent/empty | System configuration OFF |
+| Proton with lockdown `0`/`null`, or another incomplete combination | Partial configuration |
+| Another provider, unexpected exceptions or unsupported values | Conflict; no automatic writes |
+| Read failed, unverified target or unreachable endpoint | Status needs verification |
 
-| Condizione letta per l'utente 0 | Interpretazione |
-|---|---|
-| App `ch.protonvpn.android`, lockdown `1`, nessuna eccezione | Configurazione di sistema ON |
-| App `null`, lockdown `null` oppure `0`, whitelist assente o vuota | Configurazione di sistema OFF |
-| App Proton con lockdown `0`/`null`, oppure combinazione incompleta | Configurazione parziale |
-| Altro provider, eccezioni inattese, valori non supportati | Conflitto da spiegare; niente scritture automatiche |
-| Lettura non riuscita, target non autenticato o irraggiungibile | Stato da verificare |
+Settings do not measure traffic. Never infer “no leaks” or “tunnel connected”. The UI may distinguish a current read from post-restart verification and show the last-read time. Proton Auto-connect is independent: OFF neither necessarily disconnects the tunnel nor changes Proton's internal preference.
 
-Le impostazioni non sono una misura del traffico: non derivarne un indicatore "nessuna perdita" o "tunnel connesso". La UI può mostrare configurazione letta e configurazione verificata dopo il riavvio, con l'istante dell'ultima lettura. La prova funzionale è descritta nella procedura di accettazione.
+## Enable
 
-L'Auto-connect di Proton è indipendente. OFF rimuove gli automatismi Android concordati; non disconnette necessariamente il tunnel e non modifica la preferenza interna di Proton.
-
-## Attivazione
-
-Sul solo target confermato, con una singola operazione alla volta e dopo la conferma UI prevista da `PRODUCT_SPEC.md`:
+Only on the verified target, one operation at a time and after UI confirmation:
 
 ```sh
 settings --user 0 put secure always_on_vpn_app ch.protonvpn.android
 settings --user 0 put secure always_on_vpn_lockdown 1
 ```
 
-Rileggere le tre chiavi. Le prime due devono essere esattamente `ch.protonvpn.android` e `1`; la whitelist deve restare senza eccezioni. Un exit code favorevole senza readback non basta. Un errore o una scrittura parziale impedisce il riavvio automatico e richiede stato esplicito e azione di ripristino coerente.
+Read all three keys again. Require exactly Proton/`1` and no whitelist exceptions. A favorable exit code without readback is insufficient. A failed or partial write blocks automatic restart and requires an explicit state and pertinent recovery. Failed ON must not automatically invoke OFF and weaken a pre-existing protection.
 
-## Disattivazione completa
+## Disable completely
 
-Applicare in quest'ordine:
+Apply in this order:
 
 ```sh
 settings --user 0 delete secure always_on_vpn_lockdown
@@ -63,66 +63,56 @@ settings --user 0 delete secure always_on_vpn_app
 settings --user 0 delete secure always_on_vpn_lockdown_whitelist
 ```
 
-Rileggere tutte e tre le chiavi e richiedere `null` prima del riavvio, come nella guida concordata. La cancellazione di una chiave già assente è valida: `Deleted 0 rows` non è un errore. Non sostituire `delete` con `put ... null`, che scriverebbe una stringa.
+Read all three keys and require `null` before restart. Deleting an absent key is valid: `Deleted 0 rows` is not failure. Do not use `put ... null`, which stores a string. OFF also works when only always-on is enabled and lockdown is already disabled. On discordant results, do not claim success or restart automatically. Preserve the minimum pending state without logging secrets.
 
-La sequenza deve funzionare anche quando è attivo soltanto l'always-on e il kill switch è già OFF. In caso di risultati discordanti non annunciare successo e non riavviare automaticamente. Conservare il minimo stato locale utile a spiegare una modifica parziale, senza includere segreti nei log.
+## Restart and reconnect
 
-## Riavvio e riconnessione
+After favorable readback, use ADB's `reboot:` service, equivalent to `adb reboot`; do not substitute an arbitrary shell string. Persist the pending operation before mutation/restart as implemented. Connection loss is expected but does not prove a completed restart.
 
-Dopo il readback favorevole richiedere il riavvio attraverso il servizio ADB appropriato, equivalente a `adb reboot`. Verificare l'API concreta della libreria: non assumere che una generica stringa nella shell equivalga al servizio ADB di riavvio.
+Rediscover, recheck identity and wait for available startup evidence (`getprop sys.boot_completed` and a comparable boot indicator where readable). Use finite timeouts/bounded retries. Never loop mutations or restarts because a reply was lost.
 
-La perdita della connessione è attesa, ma non dimostra da sola il riavvio riuscito. Registrare l'operazione pendente, ritrovare il dispositivo tramite discovery, verificarne nuovamente l'identità e attendere l'avvio con segnali disponibili, ad esempio `getprop sys.boot_completed` e un indicatore di avvio confrontabile se leggibile. Implementare timeout finiti e retry limitati; non inviare ciclicamente comandi mutanti o reboot per una risposta persa.
+After startup, verify Proton/`1`/no exceptions for ON; app `null`, lockdown `null` or `0`, whitelist absent/empty for OFF. Runtime signals can supplement readback only with documented scope. These checks do not certify every traffic path or replace actual functional testing.
 
-Dopo l'avvio:
+Backgrounding, rotation, language changes or process death must not erase pending-operation meaning. On return, read/reconcile instead of replaying writes or restarts. No permanent service is required.
 
-- ON: verificare app Proton, lockdown `1`, nessuna eccezione.
-- OFF: verificare app `null`, lockdown `null` oppure `0`, whitelist assente o vuota.
+## Transport errors and safe behavior
 
-Le verifiche di applicazione runtime disponibili sul firmware possono integrare la rilettura, documentandone limiti e formato. Le sole chiavi non certificano il blocco di ogni flusso. La qualifica funzionale sul target resta necessaria.
+Distinguish pairing rejection/expiry, revoked credentials, empty discovery, changed endpoint, network/permission failure, unsupported target, shell failure, partial configuration and unverified restart. Keep typed failure reasons separate from language-dependent display text.
 
-Se l'app va in background, viene ruotata o viene terminata, non deve perdere silenziosamente il significato dell'operazione: alla riapertura rilegge lo stato e riconcilia l'eventuale operazione pendente. Nessun bisogno di un servizio residente permanente.
+Use only allowlisted commands and validated arguments. Never interpolate pairing codes, UI text or endpoints into remote commands. Shell frames use random delimiters, checked exit codes and bounded output; a loose occurrence of `1` is not success. Transport deadlines and cancellation bound pairing, connection and command waits. Concurrent double taps are blocked.
 
-## Errori e comportamento sicuro
+A popup informs and confirms; it cannot enable a stopped adbd. If Wireless debugging is off, show TV-side instructions and retry. Manual IP entry only helps when a reachable endpoint exists.
 
-Distinguere almeno: pairing rifiutato/scaduto, credenziali revocate, discovery vuota, endpoint cambiato, rete locale non accessibile, permesso di rete negato, target incompatibile, errore shell, configurazione parziale e riavvio non verificato. Le risposte shell devono avere framing e controlli affidabili; non interpretare una semplice occorrenza di `1` in un output come successo.
+## USB recovery
 
-Usare comandi fissi e argomenti validati; non interpolare codice di pairing, input UI o indirizzi nella shell remota. Bloccare i doppi tap concorrenti. Un errore durante ON non deve attivare automaticamente una procedura OFF che riduca una protezione preesistente. Preparare un recupero esplicito e idempotente.
+USB is a recovery option **only if USB debugging is already enabled and the PC is authorized**. Use a suitable data connection and power supply. Verify the target's identity, supported model/API and Android user before any write. `adb -d` selects the sole USB device and avoids accidentally choosing a wireless connection; if several USB devices are present, select the verified serial explicitly instead.
 
-Il popup è guida e conferma: non abilita adbd quando è spento. In tale caso mostrare i passi dal telecomando e una nuova ricerca; l'IP manuale aiuta solo se esiste un endpoint accessibile.
-
-## Configurazione intermedia per il collaudo
-
-Per il caso D09 della procedura di accettazione, l'operatore può preparare sul target già identificato questo stato dalla shell ADB autorizzata:
+With Android SDK Platform Tools on `PATH`, inspect the target first:
 
 ```sh
-settings --user 0 put secure always_on_vpn_app ch.protonvpn.android
-settings --user 0 put secure always_on_vpn_lockdown 0
-settings --user 0 get secure always_on_vpn_app
-settings --user 0 get secure always_on_vpn_lockdown
+adb -d shell getprop ro.product.device
+adb -d shell getprop ro.build.version.sdk
+adb -d shell am get-current-user
+adb -d shell pm path ch.protonvpn.android
+adb -d shell settings --user 0 get secure always_on_vpn_app
+adb -d shell settings --user 0 get secure always_on_vpn_lockdown
+adb -d shell settings --user 0 get secure always_on_vpn_lockdown_whitelist
 ```
 
-Richiedere readback Proton/`0`, quindi applicare il riavvio con il servizio ADB già descritto e rileggere. Questa fixture serve esclusivamente al collaudo: non introduce un terzo pulsante o un comportamento alternativo nell'app. La successiva operazione OFF completa è il ripristino previsto; le precondizioni sul target e sulla whitelist restano valide.
-
-## Recupero da PC via USB
-
-Il collegamento USB dati e l'alimentazione adeguata sono già stati confermati dall'utente su questa Chromecast. Il PC deve essere autorizzato e il Debug USB abilitato. `-d` seleziona il trasporto USB ed evita ambiguità con le connessioni wireless dello stesso dispositivo.
-
-Il blocco ripristina le tre chiavi alla baseline assente e riavvia solo dopo il readback. Il percorso SDK è quello comunicato dall'utente su Fedora; non è un percorso richiesto dall'app Android.
+Proceed only for the verified supported target with the expected Proton configuration and no unrelated provider or whitelist exceptions. The following deliberately removes Android always-on/lockdown and restarts only after all three deletions are read back:
 
 ```bash
-CC_ADB="$HOME/Android/Sdk/platform-tools/adb"
-
-if "$CC_ADB" -d shell settings --user 0 delete secure always_on_vpn_lockdown &&
-   "$CC_ADB" -d shell settings --user 0 delete secure always_on_vpn_app &&
-   "$CC_ADB" -d shell settings --user 0 delete secure always_on_vpn_lockdown_whitelist &&
-   [ "$("$CC_ADB" -d shell settings --user 0 get secure always_on_vpn_app | tr -d '\r\n')" = "null" ] &&
-   [ "$("$CC_ADB" -d shell settings --user 0 get secure always_on_vpn_lockdown | tr -d '\r\n')" = "null" ] &&
-   [ "$("$CC_ADB" -d shell settings --user 0 get secure always_on_vpn_lockdown_whitelist | tr -d '\r\n')" = "null" ]; then
-    echo "Configurazione di sistema rimossa. Riavvio della Chromecast..."
-    "$CC_ADB" -d reboot
+if adb -d shell settings --user 0 delete secure always_on_vpn_lockdown &&
+   adb -d shell settings --user 0 delete secure always_on_vpn_app &&
+   adb -d shell settings --user 0 delete secure always_on_vpn_lockdown_whitelist &&
+   [ "$(adb -d shell settings --user 0 get secure always_on_vpn_app | tr -d '\r\n')" = "null" ] &&
+   [ "$(adb -d shell settings --user 0 get secure always_on_vpn_lockdown | tr -d '\r\n')" = "null" ] &&
+   [ "$(adb -d shell settings --user 0 get secure always_on_vpn_lockdown_whitelist | tr -d '\r\n')" = "null" ]; then
+    echo "System configuration removed. Restarting the Chromecast..."
+    adb -d reboot
 else
-    echo "Rimozione non confermata. Controlla cavo, Debug USB e autorizzazione del PC."
+    echo "Removal not verified. Check the cable, USB debugging and PC authorization."
 fi
 ```
 
-Dopo il riavvio rileggere app e lockdown con il medesimo selettore `-d`; valgono le condizioni OFF indicate sopra. Questa procedura è recupero tecnico e non il percorso ordinario richiesto all'utente dell'app.
+After restart, read the three keys again using the same verified target and apply the OFF interpretation above. This is technical recovery, not a prerequisite for normal app use.

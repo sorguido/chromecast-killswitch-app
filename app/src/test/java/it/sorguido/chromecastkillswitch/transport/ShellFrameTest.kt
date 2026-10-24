@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Original app code; see LICENSE and LICENSE-ADDITIONAL-PERMISSION.
 package it.sorguido.chromecastkillswitch.transport
 
 import org.junit.Assert.assertEquals

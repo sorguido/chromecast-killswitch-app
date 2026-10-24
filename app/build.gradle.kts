@@ -5,8 +5,9 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
-val signingFile = rootProject.file("signing.properties")
-val signing = Properties().apply { if (signingFile.exists()) signingFile.inputStream().use { load(it) } }
+val signingFile = rootProject.file("development/signing.properties")
+val useReleaseSigning = signingFile.exists() && !providers.gradleProperty("unsigned").isPresent
+val signing = Properties().apply { if (useReleaseSigning) signingFile.inputStream().use { load(it) } }
 
 android {
     namespace = "it.sorguido.chromecastkillswitch"
@@ -16,12 +17,12 @@ android {
         applicationId = "it.sorguido.chromecastkillswitch"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
-        if (signingFile.exists()) create("release") {
+        if (useReleaseSigning) create("release") {
             storeFile = rootProject.file(signing.getProperty("storeFile"))
             storePassword = signing.getProperty("storePassword")
             keyAlias = signing.getProperty("keyAlias")
@@ -31,11 +32,11 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            if (signingFile.exists()) signingConfig = signingConfigs.getByName("release")
+            if (useReleaseSigning) signingConfig = signingConfigs.getByName("release")
         }
     }
     buildFeatures { compose = true; buildConfig = true }
-    // APK standalone: il grafo è nei lock; il blocco Play cifrato impedisce confronti byte per byte.
+    // Standalone APK: dependency locks are public; omit encrypted Play metadata.
     dependenciesInfo { includeInApk = false; includeInBundle = false }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

@@ -1,0 +1,28 @@
+Additional permission under GNU GPL version 3 section 7
+
+Copyright (C) 2026 sorguido
+
+The original Chromecast Kill Switch application code is free software: you
+may redistribute it and/or modify it under the terms of the GNU General
+Public License as published by the Free Software Foundation, either
+version 3 of the License, or (at your option) any later version.
+SPDX-License-Identifier: GPL-3.0-or-later
+
+As an additional permission under GNU GPL version 3 section 7, the copyright
+holder of the original application code permits you to link or combine
+that code with Conscrypt and the BoringSSL code included by Conscrypt,
+including the portions under the original OpenSSL and SSLeay licenses,
+and to convey the resulting work. This permission applies only to the
+original application code covered by the above copyright; it does not
+relicense any third-party component or waive any of its conditions.
+
+For a conveyance relying on this permission, provide the Corresponding
+Source for the covered application and for the Conscrypt/BoringSSL
+components used in the combination, and retain all applicable copyright
+notices, license texts, disclaimers and required acknowledgments. All
+other GNU GPL requirements for the covered application continue to apply.
+
+You may remove this additional permission from a modified version of the
+original application code as permitted by GNU GPL version 3 section 7.
+Do not assume that this permission covers code from another copyright
+holder who has not granted it.

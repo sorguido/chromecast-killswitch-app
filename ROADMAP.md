@@ -1,27 +1,24 @@
-# State machine
+# Delivery roadmap
 
-L'obiettivo terminale è un'app Android completa, installabile e verificata per il prodotto definito in `docs/PRODUCT_SPEC.md`. Le fasi sono checkpoint interni dello stesso Goal; il loro superamento conduce alla fase successiva, senza consegne di app dimostrative o richieste di continuazione.
+The current terminal objective is the localized, publication-ready Android app defined in [PRODUCT_SPEC.md](docs/PRODUCT_SPEC.md), with verified distributable artifacts. Ordinary phase transitions are checkpoints of the same goal.
 
-## Percorso
+The existing native Android/authorized wireless ADB implementation remains the primary path. Localization/publication does not expand TV, firmware or VPN-provider support, or change the operation contract. Investigate a demonstrated implementation problem with a minimal discriminating experiment; do not build a competing transport or change product scope without a pertinent mandate.
 
-`PRIMARY`: app Android nativa, client ADB wireless autorizzato, discovery locale e comandi documentati. La base candidata e le decisioni ancora da validare sono in `docs/phase-specific/P0_BUILD_BASELINE.md`.
+## Existing baseline
 
-Se emerge un problema, adattare il percorso primario e svolgere l'esperimento discriminante pertinente. Soltanto quando l'impedimento è dimostrato e le correzioni ragionevoli sono esaurite, valutare `FALLBACK`: un'altra implementazione client ADB mantenendo autenticazione, comportamento e prodotto concordati. Non sviluppare i due percorsi in parallelo. Un cambiamento di prodotto o autorizzazioni segue `AGENTS.md`.
+The original implementation completed toolchain, integration and local qualification work. The owner subsequently reported successful real operational paths, including from the app, on the designated setup. That is **user-reported** evidence, not a newly observed thirteen-case acceptance receipt and not physical validation of the bilingual APK. Historical raw working material is private; public results belong in [PUBLICATION.md](docs/PUBLICATION.md).
 
-| PHASE | PURPOSE | PRIMARY_ARTIFACT | EXIT_GATE | NEXT |
-|---|---|---|---|---|
-| P0 | Consolidare baseline, toolchain e scelta del client nel progetto finale | `docs/phase-specific/P0_BUILD_BASELINE.md` | `G0`: toolchain e dipendenze fissate; compatibilità e licenze valutate; percorso implementabile, rischi e prove necessarie espliciti | P1 |
-| P1 | Realizzare tutta l'app integrata | `research/decisions/P1_IMPLEMENTATION.md` | `G1`: requisiti funzionali/UX implementati con trasporto reale; nessun flusso principale fittizio o lasciato da completare; review del codice svolta | P2 |
-| P2 | Qualificare il prodotto e preparare il medesimo APK da collaudare | `evidence/current/QUALITY_REPORT.md` | `G2`: build riproducibile, test e lint pertinenti superati; QA visiva e accessibilità documentate; APK release firmato, checksum e procedura di installazione pronti | P3 |
-| P3 | Verificare l'uso reale sui dispositivi designati | `evidence/current/DEVICE_ACCEPTANCE.md` | `G3`: procedura `docs/phase-specific/DEVICE_ACCEPTANCE.md` eseguita con esiti effettivi e attribuiti; problemi corretti e ricontrollati; nessuna prova obbligatoria sostituita da mock | P4 oppure P1/P2 per correzioni |
-| P4 | Consegnare il prodotto verificato | `evidence/current/DELIVERY.md` | `G4`: tutti i requisiti obbligatori tracciati a evidenze; APK finale e istruzioni fruibili; sorgente/commit, versione, firma e checksum coerenti con il collaudo; limiti residui dichiarati e non bloccanti | `MILESTONE_COMPLETE` |
+## Localization and publication phase
 
-I percorsi degli artefatti futuri sono intenzionali: crearli quando la relativa fase produce risultati, non come file vuoti. L'indice distingue gli artefatti disponibili da quelli previsti.
+| Stage | Required result | Exit evidence |
+| --- | --- | --- |
+| L1 | First functional change: complete EN default and IT resources; only primary system language `it` selects Italian; no per-app override | Resource/placeholder checks, locale-selection tests, relevant UI and lifecycle regressions |
+| L2 | One private `development/` area; portable English public documents, real screenshot and GPL-3.0-or-later original code; preserved third-party material | Current-tree and history review, links, source/notice inventory and documented unavoidable tooling exceptions |
+| L3 | New version with original application ID and signing identity; focused qualification | Release build, lint, operation/framing/state tests, bilingual UI checks, certificate comparison, clean-checkout rebuild without private signing material |
+| L4 | Matching source, signed APK, checksums and short English release notes delivered through a new tag/release when access permits | Commit/tag correspondence; actual release assets and links; downloaded APK hash/signature verification; unchanged repository visibility |
 
-## Applicazione dei gate
+[BUILD.md](docs/BUILD.md) owns build/distribution instructions. [PUBLICATION.md](docs/PUBLICATION.md) owns current results and limitations. JSON caches only route that evidence.
 
-Solo `G4` soddisfa il Goal. Un APK che compila, un insieme di test sintetici, una UI con dati simulati o un rapporto di fattibilità non soddisfano `G3`/`G4`.
+All stages must be addressed before `MILESTONE_COMPLETE`. If remote publication is technically unavailable, finish the verified local release bundle and provide the exact missing access or action; do not call a local bundle or draft a published release. Unresolved private history exposure prevents declaring the repository publication-ready, even if the current tree is clean. Do not change visibility or rewrite shared history as part of this phase.
 
-Se manca l'intervento umano indispensabile a `G3`, preparare prima app completa, APK, QA eseguibile e procedura minima; registrare `HUMAN_REQUIRED` secondo `AGENTS.md`, mantenendo `G3` aperto. Proseguire ogni attività indipendente. Non inventare accesso al telefono o risultati della Chromecast.
-
-Dopo ogni modifica che incide sul prodotto, tornare al controllo pertinente e preservare la corrispondenza tra sorgente, APK e prove. Non qualificare una build differente da quella consegnata; una modifica richiede rivalutazione motivata della copertura.
+Preserve the user-reported physical evidence without inventing detail. Recheck the risks affected by changes; emulator/synthetic tests do not certify live tunnel behavior. Any genuinely unavoidable human dependency follows `AGENTS.md` after all independent work is finished.

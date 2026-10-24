@@ -1,48 +1,25 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "authoritative": false,
-  "execution_path": "PRIMARY",
-  "phase": "P3",
-  "phase_status": "HUMAN_REQUIRED",
+  "phase": "LOCALIZATION_PUBLICATION",
+  "phase_status": "IN_PROGRESS",
+  "version": "1.1.0",
+  "version_code": 2,
+  "repository_visibility": "PRIVATE",
   "completed_gates": [
-    "G0",
-    "G1",
-    "G2"
+    "L1"
   ],
   "pending_gates": [
-    "G3",
-    "G4"
+    "L2_HISTORY",
+    "L3_CLEAN_CHECKOUT",
+    "L4"
   ],
-  "host_modified": false,
+  "evidence_note": "24 unit tests passed; instrumentation: 20 passed, one opt-in pairing case skipped on API35 emulator. Historical physical operation remains USER_REPORTED. Public visibility remains blocked by historical personal references.",
   "relevant_artifacts": [
     "docs/PRODUCT_SPEC.md",
     "docs/COMMAND_CONTRACT.md",
-    "docs/phase-specific/P0_BUILD_BASELINE.md",
-    "research/decisions/P1_IMPLEMENTATION.md",
-    "research/decisions/CORE.md",
-    "research/decisions/TRANSPORT.md",
-    "evidence/current/QUALITY_REPORT.md",
-    "evidence/current/local-checks.json",
-    "evidence/current/DEVICE_ACCEPTANCE.md",
-    "docs/phase-specific/DEVICE_ACCEPTANCE.md"
+    "docs/BUILD.md",
+    "docs/PUBLICATION.md"
   ],
-  "relevant_corroborations": [
-    "C1",
-    "C2",
-    "C3"
-  ],
-  "next_action": "Installare e collaudare lo stesso APK release 1.0.0 sul Motorola e sulla Chromecast secondo D01–D13; registrare esiti reali nella ricevuta DEVICE_ACCEPTANCE. Nessuna ulteriore attività indipendente necessaria prima del collaudo.",
-  "last_verified_head": "0d1265e1d621e3251281daf79c0ecccbd7de7f99",
-  "bootstrap_source_head": "970fcccf2d73ef9252cc42263ab9a0f513bed14f",
-  "open_inputs": [
-    "Esiti fisici D01–D13 sul Motorola edge 40 neo (XT2307-1), Android 15, e Chromecast designata. APK release SHA-256 8eb281a2ebb21807df137513702e3b03647e0ff5692c543e59350be8783f8dba"
-  ],
-  "evidence_note": "G2 PROVEN localmente: 23 test unitari, 14 strumentali, lint senza errori, APK firmato e rebuild indipendente identico. PASS storici da PC e modello telefono restano USER_REPORTED; G3/G4 aperti.",
-  "phone": {
-    "model": "Motorola edge 40 neo",
-    "model_code": "XT2307-1",
-    "android": "15",
-    "source": "USER_REPORTED nella conversazione del 24 ottobre 2026",
-    "tested": false
-  }
+  "next_action": "Build the committed tree from a clean checkout; verify signed APK update and publish/check private GitHub release."
 }

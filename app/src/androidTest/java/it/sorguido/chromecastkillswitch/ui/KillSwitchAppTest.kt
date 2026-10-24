@@ -1,5 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Original app code; see LICENSE and LICENSE-ADDITIONAL-PERMISSION.
 package it.sorguido.chromecastkillswitch.ui
 
+import it.sorguido.chromecastkillswitch.R
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
@@ -17,11 +20,11 @@ class KillSwitchAppTest {
     @get:Rule val compose = createComposeRule()
     private val operations = mutableListOf<Boolean>()
     private val ready = UiState(targetName = "Chromecast di test", paired = true,
-        connection = "Collegata", configuration = "Configurazione OFF", canOperate = true)
+        connection = UiText(R.string.connection_identified), configuration = UiText(R.string.configuration_off), canOperate = true)
     private val actions = UiActions({}, {}, { _, _, _ -> }, { _, _ -> }, { operations.add(it) })
 
     @Test fun everyTapRequiresConfirmationAndCancelDoesNothing() {
-        compose.setContent { KillSwitchApp(ready, actions) }
+        compose.setContent { LocalizedContent { KillSwitchApp(ready, actions) } }
         repeat(2) {
             compose.onNodeWithText("Attiva e riavvia").performScrollTo().performClick()
             compose.onNodeWithText("Attivare e riavviare?").assertIsDisplayed()
@@ -36,7 +39,7 @@ class KillSwitchAppTest {
     }
 
     @Test fun offExplainsAndroidAndProtonBeforeDispatch() {
-        compose.setContent { KillSwitchApp(ready, actions) }
+        compose.setContent { LocalizedContent { KillSwitchApp(ready, actions) } }
         compose.onNodeWithText("Disattiva e riavvia").performScrollTo().performClick()
         compose.onNodeWithText("Disattivare e riavviare?").assertIsDisplayed()
         compose.onNodeWithText("Verranno disattivati always-on e kill switch di Android. L’Auto-connect di Proton resta separato.")
@@ -48,9 +51,9 @@ class KillSwitchAppTest {
 
     @Test fun becomingBusyDisablesPendingConfirmationAndBothOperations() {
         val state = mutableStateOf(ready)
-        compose.setContent { KillSwitchApp(state.value, actions) }
+        compose.setContent { LocalizedContent { KillSwitchApp(state.value, actions) } }
         compose.onNodeWithText("Attiva e riavvia").performScrollTo().performClick()
-        compose.runOnIdle { state.value = ready.copy(busy = true, progress = "Lettura in corso") }
+        compose.runOnIdle { state.value = ready.copy(busy = true, progress = UiText(R.string.progress_readback)) }
         compose.onNodeWithText("Conferma").performScrollTo().assertIsNotEnabled()
         compose.onNodeWithText("Annulla").performScrollTo().performClick()
         compose.onNodeWithText("Attiva e riavvia").assertIsNotEnabled()
@@ -60,11 +63,11 @@ class KillSwitchAppTest {
     }
 
     @Test fun recoveryGuideIsAvailableWithoutPairingOrNetwork() {
-        compose.setContent { KillSwitchApp(UiState(error = "Collegamento non disponibile"), actions) }
+        compose.setContent { LocalizedContent { KillSwitchApp(UiState(error = UiText(R.string.connection_failed)), actions) } }
         compose.onNodeWithText("Apri la guida di recupero").performScrollTo().performClick()
         compose.onNodeWithText("Se non viene trovata").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("Recupero USB dal PC").performScrollTo().assertIsDisplayed()
-        compose.onNodeWithText("Le istruzioni qui sopra sono disponibili offline. I collegamenti esterni richiedono rete e accesso al tuo account.")
+        compose.onNodeWithText("Le istruzioni qui sopra sono disponibili offline. Il collegamento esterno richiede rete e accesso al repository.")
             .performScrollTo().assertIsDisplayed()
         compose.runOnIdle { assertEquals(emptyList<Boolean>(), operations) }
     }
@@ -72,7 +75,7 @@ class KillSwitchAppTest {
     @Test fun discoveryCanBeRetriedWhileMonitoringIsActive() {
         var searches = 0
         compose.setContent {
-            KillSwitchApp(ready.copy(discoveryRunning = true), actions.copy(onDiscover = { searches++ }))
+            LocalizedContent { KillSwitchApp(ready.copy(discoveryRunning = true), actions.copy(onDiscover = { searches++ })) }
         }
         compose.onNodeWithText("Collegamento e associazione").performScrollTo().performClick()
         compose.onNodeWithText("Ricerca attiva…").performScrollTo().assertIsDisplayed()
@@ -81,7 +84,7 @@ class KillSwitchAppTest {
     }
 
     @Test fun doubledTextKeepsEssentialActionsReachableByScrolling() = withEmulatorFontScale(2f) {
-        compose.setContent { KillSwitchApp(ready, actions) }
+        compose.setContent { LocalizedContent { KillSwitchApp(ready, actions) } }
         compose.onNodeWithText("Disattiva e riavvia").performScrollTo().assertIsDisplayed().performClick()
         compose.onNodeWithText("Il telefono deve poter raggiungere la Chromecast sulla rete locale e il Debug wireless deve essere attivo.")
             .performScrollTo().assertIsDisplayed()

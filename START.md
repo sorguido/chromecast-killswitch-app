@@ -1,16 +1,15 @@
-# Avvio e ripresa
+# Start and resume
 
-Leggi integralmente, nell'ordine, questo file, `AGENTS.md`, `ROADMAP.md` e `CORROBORATIONS.md`. Poi leggi `PROJECT_STATE.json` e `ARTIFACT_INDEX.json`.
+Read this file, `AGENTS.md`, `ROADMAP.md` and `CORROBORATIONS.md` in order, then `PROJECT_STATE.json` and `ARTIFACT_INDEX.json`.
 
-Ricostruisci il punto di lavoro prima di modificare il progetto:
+Before editing:
 
-1. Controlla repository e remote, branch corrente, HEAD, stato del worktree e commit recenti. Identifica modifiche dell'utente o di altri agenti già presenti.
-2. Confronta i deliverable realmente esistenti con le evidenze indicizzate e con i gate della roadmap. Una cache aggiornata non sostituisce questa verifica.
-3. Determina la fase effettiva, il primo requisito non soddisfatto e le dipendenze che impediscono di affrontarlo.
-4. Carica soltanto gli artefatti e i dossier pertinenti, usando l'indice. I percorsi dichiarati futuri non sono documenti mancanti da ricreare automaticamente.
-5. Riprendi dal primo lavoro utile: implementazione, verifica, correzione o preparazione dell'azione che sblocca il passo successivo.
-6. Prosegui attraverso le fasi fino a una condizione terminale definita dai documenti canonici. Le normali transizioni sono checkpoint del medesimo obiettivo.
+1. Inspect repository, remote, branch, HEAD, worktree changes and recent commits. Preserve other people's work.
+2. Compare actual deliverables and evidence with roadmap gates. Reconstructible JSON caches are not proof.
+3. Identify the first unmet requirement and any genuine dependency.
+4. Load only relevant artifacts through the index. A planned artifact is not a missing file to create empty.
+5. Resume the next useful implementation, check, correction or preparation step and continue through ordinary checkpoints to a real terminal condition.
 
-Prima di interrompere il lavoro, aggiorna le cache ricostruibili e l'artefatto principale della fase con risultati, riferimenti alle prove, questioni aperte e prossima azione. Mantieni distinguibili ciò che è implementato, ciò che è stato verificato e ciò che richiede ancora una prova.
+For the localization/publication phase, the accepted scope is summarized in `ROADMAP.md`; `docs/PRODUCT_SPEC.md` owns product requirements, `docs/COMMAND_CONTRACT.md` owns technical behavior, and `docs/PUBLICATION.md` records verification. A fresh clone needs no personal pages or private files to understand or build the product. Local historical mandates and raw evidence, where present, belong under ignored `development/` and are not public prerequisites.
 
-Per un nuovo avvio in modalità Goal, il mandato è in `docs/AI_PM_GOAL.md`; per una ripresa, conserva il mandato già attivo e ricostruisci lo stato corrente.
+Before stopping, update reconstructible caches and the current phase artifact with results, evidence, unresolved requirements and the next action. Distinguish implemented, locally verified and user-reported physical results. An interruption is not completion.
