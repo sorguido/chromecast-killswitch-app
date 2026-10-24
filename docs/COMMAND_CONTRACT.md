@@ -1,6 +1,6 @@
 # ADB and VPN operation contract
 
-This document owns commands, interpretation and sequencing. [PRODUCT_SPEC.md](PRODUCT_SPEC.md) owns product/UI requirements and [ROADMAP.md](../ROADMAP.md) owns delivery gates. Public primary references are routed through [CORROBORATIONS.md](../CORROBORATIONS.md).
+This document owns commands, interpretation and sequencing. [PRODUCT_SPEC.md](PRODUCT_SPEC.md) owns product/UI requirements.
 
 ## Target and preflight
 
