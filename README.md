@@ -4,7 +4,6 @@ A local Android remote for **Chromecast with Google TV HD**: enable or disable A
 
 <p align="center">
   <img src="docs/images/app-home-en.jpeg" width="340" alt="Chromecast Kill Switch home screen in English">
-  <br><em>English home screen supplied by the user from the version in use.</em>
 </p>
 
 ## Download and use
