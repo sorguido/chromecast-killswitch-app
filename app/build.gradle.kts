@@ -35,6 +35,8 @@ android {
         }
     }
     buildFeatures { compose = true; buildConfig = true }
+    // APK standalone: il grafo è nei lock; il blocco Play cifrato impedisce confronti byte per byte.
+    dependenciesInfo { includeInApk = false; includeInBundle = false }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
