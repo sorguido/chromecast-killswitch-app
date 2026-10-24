@@ -1,6 +1,6 @@
 # Product requirements
 
-This document owns functional and interface requirements. [COMMAND_CONTRACT.md](COMMAND_CONTRACT.md) owns commands, state classification and operation sequencing; [ROADMAP.md](../ROADMAP.md) owns delivery gates.
+This document owns functional and interface requirements. [COMMAND_CONTRACT.md](COMMAND_CONTRACT.md) owns commands, state classification and operation sequencing.
 
 ## Scope
 
