@@ -1,95 +1,56 @@
-# ADB and VPN operation contract
+# Troubleshooting and recovery
 
-This document owns commands, interpretation and sequencing. [PRODUCT_SPEC.md](PRODUCT_SPEC.md) owns product/UI requirements.
+Use this guide if pairing, connection or an operation does not finish. Normal setup and daily use are in the [README](../README.md).
+
+## Connection problems
+
+| Problem | What to do |
+| --- | --- |
+| No Chromecast appears | Put the phone and TV on the same trusted network and enable Wireless debugging on the TV. Guest-network isolation can prevent discovery. Use **Connection and pairing** to enter the current IP address and port manually. |
+| Pairing fails or the code expires | Open **Pair device with pairing code** on the TV again. Use the pairing port and fresh six-digit code while that screen stays open. |
+| Pairing succeeds but connection fails | Return to the TV's main Wireless debugging screen and use its **connection port**, which differs from the pairing port. |
+| Connection stops working after a restart | Check that Wireless debugging is still enabled on the TV. Discover or enter its current connection address and port, then tap **Read state again**. |
+| The app rejects the TV or its settings | Check the supported configuration below. A different VPN provider or an unexpected exception list blocks changes; do not clear settings belonging to another setup. |
+| Internet access stops while the kill switch is on | Open Proton VPN on the TV and restore its connection. If you want to remove the system settings, use **Disable and reboot** when ADB is reachable, or the USB procedure below. |
+| Proton still connects after disabling | Android's system settings and Proton's own **Auto-connect** preference are separate. Change Auto-connect inside Proton if you also want to stop that behavior. |
+
+The app cannot switch on a disabled ADB service remotely. Manual IP entry only helps when Wireless debugging is running and reachable.
+
+## Understanding the result
+
+| Status | Meaning |
+| --- | --- |
+| ON | Android's always-on VPN selects Proton, lockdown is enabled and no exception list is configured. |
+| OFF | The system VPN selection and exception list are absent, and lockdown is absent or disabled. |
+| Partial or conflicting | The settings do not form a supported ON or OFF configuration. |
+| Unverified or unreachable | The app cannot establish the current result. A previous read is not confirmation of the present state. |
+
+The app checks system settings, not live VPN traffic. An ON result does not prove that the tunnel is connected or that every traffic path has been tested.
+
+For both actions, the app checks the target, writes the settings, reads them back and then requests a restart. After startup it checks the target and settings again. Failed writes or inconsistent readback prevent the automatic restart. Lost connections do not trigger repeated writes or restart requests.
+
+If an operation is incomplete, restore the connection and tap **Read state again**. Check the new result before choosing another action. Closing or uninstalling the phone app does not undo settings already saved on the Chromecast.
 
 ## Target and preflight
 
-Supported target: Chromecast with Google TV HD, product/device `boreal`, Android 14/API 34, Android user `0`, Proton package `ch.protonvpn.android`. Model/firmware identify the supported profile, not a unique device.
+The supported profile is **Chromecast with Google TV HD** (`boreal`), **Android 14/API 34**, Android user **0**, with Proton VPN (`ch.protonvpn.android`) installed and configured. Other TV models, firmware versions, users and VPN providers are not supported.
 
-The phone generates and stores its own ADB credentials in private, backup-excluded storage. Pairing uses the code shown by the Chromecast; no PC identity is copied. Reinstallation, clearing app data or authorization revocation may require pairing again. Corrupt identity storage must not silently generate a replacement identity.
+The phone stores its own pairing credentials and checks the saved TV identity on connections. Clearing app data, reinstalling the app or revoking its authorization may require pairing again. If app data must be cleared during recovery, check the TV's configuration first: clearing phone data also removes the record of any unfinished operation.
 
-Discover `_adb-tls-pairing._tcp` for pairing and `_adb-tls-connect._tcp` for connection. IP, port and mDNS names are endpoints, not authentication. Never automatically select the first discovered device. The authenticated PAKE GUID is stored privately; its AOSP device serial is checked against `ro.serialno` on every connection. Unsupported GUID formats, unreadable/mismatched serials or an unrelated saved identity block access.
-
-The upstream TLS client accepts server certificates without a trusted server identity. PAKE authenticates pairing and the authorized key authenticates the phone to adbd, but shell identity checks do not establish strong server authentication against an active LAN attacker. Use a trusted LAN, do not expose ADB to the Internet, and do not claim MITM resistance. See [local transport changes](../vendor/libadb/LOCAL_CHANGES.md).
-
-After identity checks, read preflight state with fixed remote-shell commands:
-
-```sh
-getprop ro.product.model
-getprop ro.product.device
-getprop ro.build.version.release
-getprop ro.build.version.sdk
-am get-current-user
-pm path ch.protonvpn.android
-settings --user 0 get secure always_on_vpn_app
-settings --user 0 get secure always_on_vpn_lockdown
-settings --user 0 get secure always_on_vpn_lockdown_whitelist
-```
-
-The Android app opens ADB services directly; it does not invoke a PC binary. Remote daemon API parameters follow the supported TV, not the phone OS. Unconfirmed identity, unsupported target, another Android user, absent Proton, another always-on provider or unexpected whitelist entries block writes with a clear result. The supported baseline has no whitelist exceptions; do not overwrite unrelated configuration.
-
-## Read state
-
-Keep connection status, persistent values and operation progress separate. Accept `null` only from a successful framed read. Empty/truncated output, timeout or command failure does not mean an absent setting.
-
-| Successful read for user 0 | Meaning |
-| --- | --- |
-| Proton app, lockdown `1`, no exceptions | System configuration ON |
-| App `null`, lockdown `null` or `0`, whitelist absent/empty | System configuration OFF |
-| Proton with lockdown `0`/`null`, or another incomplete combination | Partial configuration |
-| Another provider, unexpected exceptions or unsupported values | Conflict; no automatic writes |
-| Read failed, unverified target or unreachable endpoint | Status needs verification |
-
-Settings do not measure traffic. Never infer “no leaks” or “tunnel connected”. The UI may distinguish a current read from post-restart verification and show the last-read time. Proton Auto-connect is independent: OFF neither necessarily disconnects the tunnel nor changes Proton's internal preference.
-
-## Enable
-
-Only on the verified target, one operation at a time and after UI confirmation:
-
-```sh
-settings --user 0 put secure always_on_vpn_app ch.protonvpn.android
-settings --user 0 put secure always_on_vpn_lockdown 1
-```
-
-Read all three keys again. Require exactly Proton/`1` and no whitelist exceptions. A favorable exit code without readback is insufficient. A failed or partial write blocks automatic restart and requires an explicit state and pertinent recovery. Failed ON must not automatically invoke OFF and weaken a pre-existing protection.
-
-## Disable completely
-
-Apply in this order:
-
-```sh
-settings --user 0 delete secure always_on_vpn_lockdown
-settings --user 0 delete secure always_on_vpn_app
-settings --user 0 delete secure always_on_vpn_lockdown_whitelist
-```
-
-Read all three keys and require `null` before restart. Deleting an absent key is valid: `Deleted 0 rows` is not failure. Do not use `put ... null`, which stores a string. OFF also works when only always-on is enabled and lockdown is already disabled. On discordant results, do not claim success or restart automatically. Preserve the minimum pending state without logging secrets.
-
-## Restart and reconnect
-
-After favorable readback, use ADB's `reboot:` service, equivalent to `adb reboot`; do not substitute an arbitrary shell string. Persist the pending operation before mutation/restart as implemented. Connection loss is expected but does not prove a completed restart.
-
-Rediscover, recheck identity and wait for available startup evidence (`getprop sys.boot_completed` and a comparable boot indicator where readable). Use finite timeouts/bounded retries. Never loop mutations or restarts because a reply was lost.
-
-After startup, verify Proton/`1`/no exceptions for ON; app `null`, lockdown `null` or `0`, whitelist absent/empty for OFF. Runtime signals can supplement readback only with documented scope. These checks do not certify every traffic path or replace actual functional testing.
-
-Backgrounding, rotation, language changes or process death must not erase pending-operation meaning. On return, read/reconcile instead of replaying writes or restarts. No permanent service is required.
-
-## Transport errors and safe behavior
-
-Distinguish pairing rejection/expiry, revoked credentials, empty discovery, changed endpoint, network/permission failure, unsupported target, shell failure, partial configuration and unverified restart. Keep typed failure reasons separate from language-dependent display text.
-
-Use only allowlisted commands and validated arguments. Never interpolate pairing codes, UI text or endpoints into remote commands. Shell frames use random delimiters, checked exit codes and bounded output; a loose occurrence of `1` is not success. Transport deadlines and cancellation bound pairing, connection and command waits. Concurrent double taps are blocked.
-
-A popup informs and confirms; it cannot enable a stopped adbd. If Wireless debugging is off, show TV-side instructions and retry. Manual IP entry only helps when a reachable endpoint exists.
+Use only a **trusted local network** and never expose ADB to the Internet. The ADB client does not verify the TV's TLS server certificate. Pairing and saved device checks help prevent accidental targeting but do not protect against an active attacker impersonating the TV on the network.
 
 ## USB recovery
 
-USB is a recovery option **only if USB debugging is already enabled and the PC is authorized**. Use a suitable data connection and power supply. Verify the target's identity, supported model/API and Android user before any write. `adb -d` selects the sole USB device and avoids accidentally choosing a wireless connection; if several USB devices are present, select the verified serial explicitly instead.
+This procedure removes **both** Android always-on VPN and the system kill switch. It leaves Proton's own Auto-connect preference unchanged.
 
-With Android SDK Platform Tools on `PATH`, inspect the target first:
+You need a computer with Android SDK Platform Tools available as `adb`, a USB data connection with adequate power, **USB debugging enabled on the Chromecast**, and authorization for that computer. Prepare and check USB access before relying on it as a recovery route. Wireless ADB connectivity is not needed.
+
+Run the commands in **Bash**. Connect only the intended USB device: `adb -d` selects USB and avoids a duplicate wireless connection. If several USB devices are attached, disconnect the others or replace every `-d` below with `-s VERIFIED_SERIAL`.
+
+### 1. Check the connected device
 
 ```sh
+adb devices -l
 adb -d shell getprop ro.product.device
 adb -d shell getprop ro.build.version.sdk
 adb -d shell am get-current-user
@@ -99,20 +60,49 @@ adb -d shell settings --user 0 get secure always_on_vpn_lockdown
 adb -d shell settings --user 0 get secure always_on_vpn_lockdown_whitelist
 ```
 
-Proceed only for the verified supported target with the expected Proton configuration and no unrelated provider or whitelist exceptions. The following deliberately removes Android always-on/lockdown and restarts only after all three deletions are read back:
+Confirm that the connected device is your Chromecast, with device name `boreal`, API `34`, user `0` and Proton installed. The VPN app setting should be `ch.protonvpn.android` or `null`, lockdown should be `1`, `0` or `null`, and the exception list should be `null` or empty. Stop if a command fails, authorization is missing, or the output identifies another device or VPN configuration.
+
+### 2. Remove the system settings and restart
 
 ```bash
 if adb -d shell settings --user 0 delete secure always_on_vpn_lockdown &&
    adb -d shell settings --user 0 delete secure always_on_vpn_app &&
    adb -d shell settings --user 0 delete secure always_on_vpn_lockdown_whitelist &&
-   [ "$(adb -d shell settings --user 0 get secure always_on_vpn_app | tr -d '\r\n')" = "null" ] &&
-   [ "$(adb -d shell settings --user 0 get secure always_on_vpn_lockdown | tr -d '\r\n')" = "null" ] &&
-   [ "$(adb -d shell settings --user 0 get secure always_on_vpn_lockdown_whitelist | tr -d '\r\n')" = "null" ]; then
+   CC_VPN_APP=$(adb -d shell settings --user 0 get secure always_on_vpn_app) &&
+   CC_VPN_LOCKDOWN=$(adb -d shell settings --user 0 get secure always_on_vpn_lockdown) &&
+   CC_VPN_WHITELIST=$(adb -d shell settings --user 0 get secure always_on_vpn_lockdown_whitelist) &&
+   [ "${CC_VPN_APP%$'\r'}" = "null" ] &&
+   [ "${CC_VPN_LOCKDOWN%$'\r'}" = "null" ] &&
+   [ "${CC_VPN_WHITELIST%$'\r'}" = "null" ]; then
     echo "System configuration removed. Restarting the Chromecast..."
     adb -d reboot
 else
-    echo "Removal not verified. Check the cable, USB debugging and PC authorization."
+    echo "Removal not verified. Check the errors before continuing."
 fi
 ```
 
-After restart, read the three keys again using the same verified target and apply the OFF interpretation above. This is technical recovery, not a prerequisite for normal app use.
+`Deleted 0 rows` is normal when a setting was already absent. The restart is requested only after all three values read back as `null`. If the reboot command itself fails, check the USB connection and authorization before continuing.
+
+### 3. Verify after startup
+
+```sh
+adb -d shell settings --user 0 get secure always_on_vpn_app
+adb -d shell settings --user 0 get secure always_on_vpn_lockdown
+adb -d shell settings --user 0 get secure always_on_vpn_lockdown_whitelist
+```
+
+After successful reads, OFF means the app value is `null`, lockdown is `null` or `0`, and the exception list is `null` or empty. A command error or missing output is not confirmation.
+
+## Command reference
+
+The app uses these Android secure settings for user `0`:
+
+| Setting | ON | OFF before restart |
+| --- | --- | --- |
+| `always_on_vpn_app` | `ch.protonvpn.android` | Deleted |
+| `always_on_vpn_lockdown` | `1` | Deleted |
+| `always_on_vpn_lockdown_whitelist` | Absent or empty; existing exceptions block changes | Deleted |
+
+Enabling writes the VPN app first and lockdown second. Disabling deletes lockdown, the VPN app and the exception list in that order. A normal OFF operation also handles always-on remaining enabled after lockdown was already removed.
+
+For implementation details, see [OperationEngine.kt](../app/src/main/java/it/sorguido/chromecastkillswitch/core/OperationEngine.kt). Build and contributor instructions are in [BUILD.md](BUILD.md).

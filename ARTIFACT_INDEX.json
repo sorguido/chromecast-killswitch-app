@@ -9,81 +9,49 @@
   ],
   "artifacts": [
     {
-      "path": "START.md",
-      "status": "AVAILABLE"
-    },
-    {
-      "path": "AGENTS.md",
-      "status": "AVAILABLE"
-    },
-    {
-      "path": "ROADMAP.md",
-      "status": "AVAILABLE"
-    },
-    {
-      "path": "CORROBORATIONS.md",
-      "status": "AVAILABLE"
-    },
-    {
-      "path": "PROJECT_STATE.json",
-      "status": "AVAILABLE"
-    },
-    {
-      "path": "ARTIFACT_INDEX.json",
-      "status": "AVAILABLE"
-    },
-    {
       "path": "README.md",
-      "status": "AVAILABLE"
-    },
-    {
-      "path": "docs/PRODUCT_SPEC.md",
-      "status": "AVAILABLE"
+      "purpose": "Installation, supported setup and daily use"
     },
     {
       "path": "docs/COMMAND_CONTRACT.md",
-      "status": "AVAILABLE"
+      "purpose": "Troubleshooting, USB recovery and operation semantics"
     },
     {
       "path": "docs/BUILD.md",
-      "status": "AVAILABLE"
-    },
-    {
-      "path": "docs/PUBLICATION.md",
-      "status": "AVAILABLE"
+      "purpose": "Build, signing and distribution"
     },
     {
       "path": "docs/images/app-home-en.jpeg",
-      "status": "AVAILABLE"
+      "purpose": "App screenshot"
     },
     {
       "path": "LICENSE",
-      "status": "AVAILABLE"
+      "purpose": "Original code license"
     },
     {
       "path": "LICENSE-ADDITIONAL-PERMISSION",
-      "status": "AVAILABLE"
+      "purpose": "Conscrypt/BoringSSL linking permission"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
-      "status": "AVAILABLE"
+      "purpose": "Dependency attribution, licenses and source"
     },
     {
       "path": "vendor/libadb/LOCAL_CHANGES.md",
-      "status": "AVAILABLE"
+      "purpose": "Vendored ADB modifications"
     },
     {
       "path": "vendor/spake2-source/README.md",
-      "status": "AVAILABLE"
+      "purpose": "SPAKE2 source and optional rebuild"
     },
     {
       "path": "scripts/collect-runtime-sources.py",
-      "status": "AVAILABLE"
+      "purpose": "Release dependency source collection"
     },
     {
       "path": "scripts/runtime-sources.json",
-      "status": "AVAILABLE"
+      "purpose": "Pinned dependency source manifest"
     }
   ],
-  "routing_note": "Public artifacts are self-contained. docs/PUBLICATION.md records verified history/release cleanup and the remaining GitHub residual-access dependency. Private backups, maps, support draft and operational records remain under ignored development/. Git and verified deliverables take precedence."
+  "routing_note": "Use the README for app help and BUILD.md for contributor instructions. Git and actual deliverables take precedence over this index."
 }

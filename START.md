@@ -1,17 +1,19 @@
-# Start and resume
+# Development entry point
 
-Read this file, `AGENTS.md`, `ROADMAP.md` and `CORROBORATIONS.md` in order, then `PROJECT_STATE.json` and `ARTIFACT_INDEX.json`.
+For installation and daily use, read `README.md`. This file is for contributors and automated maintenance.
+
+Read this file, `AGENTS.md`, `ROADMAP.md` and `CORROBORATIONS.md`, then consult the JSON indexes only if they help locate relevant work. Git and actual deliverables take precedence over cached state.
 
 Before editing:
 
-1. Inspect repository, remote, branch, HEAD, worktree changes and recent commits. Preserve other people's work.
-2. Compare actual deliverables and evidence with roadmap gates. Reconstructible JSON caches are not proof.
-3. Identify the first unmet requirement and any genuine dependency.
-4. Load only relevant artifacts through the index. A planned artifact is not a missing file to create empty.
-5. Resume the next useful implementation, check, correction or preparation step and continue through ordinary checkpoints to a real terminal condition.
+1. Inspect the repository, remote, branch, HEAD, local changes and recent commits. Preserve other people's work.
+2. Identify the requested outcome and the smallest change that achieves it.
+3. Load the relevant documentation, implementation and tests. Avoid unrelated historical working material.
+4. Check current authorizations and dependencies before requesting further input.
+5. Implement, review and verify the affected behavior, then report the result and any concrete limitation.
 
-For the localization/publication phase, the accepted scope is summarized in `ROADMAP.md`; `docs/PRODUCT_SPEC.md` owns product requirements, `docs/COMMAND_CONTRACT.md` owns technical behavior, and `docs/PUBLICATION.md` records verification. A fresh clone needs no personal pages or private files to understand or build the product. Local historical mandates and raw evidence, where present, belong under ignored `development/` and are not public prerequisites.
+`README.md` owns product scope and setup. `docs/COMMAND_CONTRACT.md` owns troubleshooting, recovery and operation semantics. `docs/BUILD.md` owns build and distribution instructions. Keep each fact in its appropriate document and link only when the reader needs the detail.
 
-After the targeted history cleanup, resume from the sanitized remote refs. Old clones, commit maps and backups are private recovery material, not branches to merge or push. The remaining GitHub residual-access dependency and its scope are recorded in `docs/PUBLICATION.md`; the cleanup authorization itself has already been fulfilled.
+Keep private signing material, local builds and raw operational records under ignored `development/`. A fresh clone must remain understandable and buildable without personal pages or private records.
 
-Before stopping, update reconstructible caches and the current phase artifact with results, evidence, unresolved requirements and the next action. Distinguish implemented, locally verified and user-reported physical results. An interruption is not completion.
+Before stopping, keep the documentation and optional JSON caches consistent with the delivered change. Record only a useful next action when work remains; do not turn public documentation into an activity log.

@@ -38,13 +38,12 @@ The concrete procedure is in [vendor/spake2-source/README.md](vendor/spake2-sour
 
 When conveying an APK, also provide these notices and complete corresponding source for the same revision, including `vendor/libadb`, `vendor/spake2-source`, `vendor/licenses`, build scripts, and the exact linked dependency-source supplement supplied with the release. Preserve all copyright/license texts and checksums; a generic link to `master` is insufficient. Retain permissive-license acknowledgments in binary distributions as well.
 
-The alternate SPAKE2 recipe's syntax and source extraction were historically checked; that is not a claim that a rebuilt native library passed the upstream binary's tests. Current build/verification results belong to the [publication record](docs/PUBLICATION.md).
-
 ## Sources and artifact identity
 
-[LibADB 3.1.1](https://github.com/MuntashirAkon/libadb-android/tree/3.1.1), [SPAKE2-Java 2.2.1](https://github.com/MuntashirAkon/spake2-java/tree/2.2.1), [SPAKE2-C exact revision](https://github.com/MuntashirAkon/spake2-c/tree/0d15933e5ba3e662cb01245a7ac0dc9fca3eac31), [Conscrypt 2.5.3](https://github.com/google/conscrypt/tree/2.5.3), and [BoringSSL license at the embedded revision](https://boringssl.googlesource.com/boringssl/+/49f0329110a1d93a5febc2bceceedc655d995420/LICENSE) support the recorded provenance. Resolved POMs and artifact hashes supplement these sources for transitive dependencies. Initial provenance inspection: 24 October 2026.
+[LibADB 3.1.1](https://github.com/MuntashirAkon/libadb-android/tree/3.1.1), [SPAKE2-Java 2.2.1](https://github.com/MuntashirAkon/spake2-java/tree/2.2.1), [SPAKE2-C exact revision](https://github.com/MuntashirAkon/spake2-c/tree/0d15933e5ba3e662cb01245a7ac0dc9fca3eac31), [Conscrypt 2.5.3](https://github.com/google/conscrypt/tree/2.5.3), and [BoringSSL license at the embedded revision](https://boringssl.googlesource.com/boringssl/+/49f0329110a1d93a5febc2bceceedc655d995420/LICENSE) identify the upstream sources. Resolved POMs and artifact hashes identify transitive dependencies.
 
 | Resolved AAR | SHA-256 |
 | --- | --- |
 | `spake2-android-2.2.1.aar` | `8798fb6c04b5d53a6307ed9481e9afe563227abd4e8b9e917c8514fa850071bb` |
 | `conscrypt-android-2.5.3.aar` | `551ae4e301c571760d1791e647db6ed1dcb10d34dcae7aa12b67f220f2ce98d1` |
+
