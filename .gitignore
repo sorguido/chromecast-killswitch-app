@@ -36,3 +36,12 @@ private/
 *.swp
 .DS_Store
 __pycache__/
+
+# Diagnostica locale e cache Android
+hs_err_pid*
+replay_pid*
+/core
+/core.*
+
+# Bundle locale per collaudo/consegna, metadati in evidence/current
+deliverables/

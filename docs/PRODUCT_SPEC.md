@@ -10,7 +10,7 @@ Un'app Android completa, installata sul telefono dell’utente, comanda una sola
 | --- | --- |
 | Dispositivo controllato | Chromecast con Google TV HD, `boreal`, Android 14, utente Android `0` |
 | Provider VPN | Proton VPN, pacchetto `ch.protonvpn.android`, già installato e configurato sulla Chromecast |
-| Telefono | Modello, versione Android e ABI ancora da rilevare; nessun modello presunto |
+| Telefono | Motorola edge 40 neo (XT2307-1), Android 15, comunicato dall’utente il 24 ottobre 2026; ABI e compatibilità effettiva da collaudare |
 | Compatibilità minima | Ipotesi e decisione possedute dalla [baseline P0](phase-specific/P0_BUILD_BASELINE.md), da convalidare sulle dipendenze e sui dispositivi; nessuna compatibilità già dimostrata |
 | Toolchain | Versioni di SDK, JDK, Gradle e dipendenze da selezionare e fissare in P0 secondo la roadmap |
 | Consegna | APK release completo, firmato, con tutte le funzioni descritte; nessun APK dimostrativo o provvisorio come deliverable |

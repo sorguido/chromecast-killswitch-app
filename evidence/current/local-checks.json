@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-24",
+  "scope": "LOCAL_SYNTHETIC_AND_EMULATOR",
+  "unit_tests": [
+    {
+      "suite": "it.sorguido.chromecastkillswitch.core.OperationEngineTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "persistenceFailureBeforeFirstWriteCannotTouchTarget",
+        "emptyTruncatedAndMultilineReadNeverBecomeOff",
+        "unavailableBootEvidenceBlocksMutationAndRetainsPendingOnReconcile",
+        "foreignTargetCannotBeMutatedEvenWithSameModel",
+        "offRequiresAllNullBeforeRebootRatherThanJustAnOffClassification",
+        "interruptedWriteAndUnrequestedRebootDoNotBecomeCompletedCycle",
+        "partialWriteFailureDoesNotRebootOrAutomaticallyUndoProtection",
+        "preflightRejectsWrongUserUnsupportedTargetMissingProtonAndForeignVpn",
+        "changedBootWithWrongStateDoesNotClearPendingOrReplay",
+        "failureToClearPendingDoesNotReportCompletedOperation",
+        "nestedOperationIsRejectedBeforeSecondMutation",
+        "explicitNewOperationCanReplacePendingAfterFreshPreflight",
+        "rebootDisconnectSurvivesProcessRestartWithoutReplay",
+        "onIsNotSuccessfulUntilNewCompletedBootIsRead",
+        "offRemovesAllThreeKeysEvenFromPartialState",
+        "ignoredWriteOrFailedReadbackPreventsReboot",
+        "configurationSeparatesPartialAndConflictFromOff",
+        "blankWhitelistNeedsACompleteLineNotMissingOutput"
+      ]
+    },
+    {
+      "suite": "it.sorguido.chromecastkillswitch.transport.ShellFrameTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "rejectsMissingTruncatedDuplicateAndFailedFrames",
+        "successfulNullIsNotAnEmptyResponse",
+        "normalizesOnlyTerminalLineEndings",
+        "bindsSerialFromAuthenticatedPairingGuid",
+        "parsesOnlyNumericEndpoints"
+      ]
+    }
+  ],
+  "instrumentation": {
+    "ui": {
+      "tests": 11,
+      "failures": 0,
+      "scope": "UI sintetica, API35 x86_64, font_scale OS2.0 e ripristino1.0"
+    },
+    "real_adb": {
+      "tests": 1,
+      "failures": 0,
+      "scope": "PAKE/TLS, binding seriale, shell, riconnessione contro adbd AVD pulito; nessuna prova Chromecast"
+    },
+    "storage_and_tls": {
+      "tests": 2,
+      "failures": 0,
+      "scope": "Recupero AtomicFile .bak/.new, pending, chiave privata persistente e Conscrypt caricato"
+    }
+  },
+  "physical_acceptance": "PENDING",
+  "screenshots": [
+    {
+      "path": "evidence/current/screenshots/evidence/synthetic-connection-error-recovery.png",
+      "sha256": "a4835e10ca3699ab64ff108604d9b941802dad831c6e5a3da7ce709d857983cf",
+      "scope": "UI_SYNTHETIC_RENDERED"
+    },
+    {
+      "path": "evidence/current/screenshots/evidence/synthetic-connection-error-stale-partial.png",
+      "sha256": "cbe9f385197df88e57771c5a16b9cdb8c1cb55b3aa42d3200a75d9f28cc2f129",
+      "scope": "UI_SYNTHETIC_RENDERED"
+    },
+    {
+      "path": "evidence/current/screenshots/evidence/synthetic-home-on-dark.png",
+      "sha256": "fc8e3585510cc3a9bb94f6690d7373983d9a973560867e05443a35e4e1348157",
+      "scope": "UI_SYNTHETIC_RENDERED"
+    },
+    {
+      "path": "evidence/current/screenshots/evidence/synthetic-home-on-light.png",
+      "sha256": "88863e50c7c4bff5e0f86182adb393e64d249a9206edccc7baaff7b60229ed3c",
+      "scope": "UI_SYNTHETIC_RENDERED"
+    },
+    {
+      "path": "evidence/current/screenshots/evidence/synthetic-home-partial-light.png",
+      "sha256": "801f005471496dfd3e464b87aee74d02a80aa35570db86f2d606bde5f148a7f6",
+      "scope": "UI_SYNTHETIC_RENDERED"
+    },
+    {
+      "path": "evidence/current/screenshots/evidence/synthetic-off-dialog-font200-actions.png",
+      "sha256": "8dddcfdefae77491dc6cd02242da7c6a74714428ae6bedf653ae3b1e8ec79fb6",
+      "scope": "UI_SYNTHETIC_RENDERED"
+    },
+    {
+      "path": "evidence/current/screenshots/evidence/synthetic-off-dialog-font200-top.png",
+      "sha256": "2b4995c1844b353d97f158eb1e40b91a99c9a4bf32137f191a86f1df297ad982",
+      "scope": "UI_SYNTHETIC_RENDERED"
+    }
+  ]
+}

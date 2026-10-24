@@ -2,34 +2,43 @@
   "schema_version": 1,
   "authoritative": false,
   "execution_path": "PRIMARY",
-  "phase": "P0",
-  "phase_status": "NOT_STARTED",
-  "completed_gates": [],
-  "pending_gates": [
+  "phase": "P2",
+  "phase_status": "FINAL_QUALIFICATION",
+  "completed_gates": [
     "G0",
-    "G1",
+    "G1"
+  ],
+  "pending_gates": [
     "G2",
     "G3",
     "G4"
   ],
   "host_modified": false,
   "relevant_artifacts": [
-    "docs/AI_PM_GOAL.md",
     "docs/PRODUCT_SPEC.md",
     "docs/COMMAND_CONTRACT.md",
     "docs/phase-specific/P0_BUILD_BASELINE.md",
-    "evidence/current/BOOTSTRAP.md"
+    "research/decisions/P1_IMPLEMENTATION.md",
+    "research/decisions/CORE.md",
+    "research/decisions/TRANSPORT.md"
   ],
   "relevant_corroborations": [
     "C1",
     "C2",
     "C3"
   ],
-  "next_action": "Ricostruire il repository secondo START.md e consolidare la baseline P0 nel progetto finale; nessun APK esiste ancora.",
-  "last_verified_head": null,
+  "next_action": "Concludere QA release, persistenza AtomicFile e riproducibilità binaria; preparare APK definitivo e richiesta unica per G3 sul Motorola/Chromecast.",
+  "last_verified_head": "4a5d69d",
   "bootstrap_source_head": "970fcccf2d73ef9252cc42263ab9a0f513bed14f",
   "open_inputs": [
-    "Modello, versione Android e ABI del telefono del collaudo non ancora comunicati; non bloccano il lavoro indipendente."
+    "Collaudo G3 sul Motorola edge 40 neo (XT2307-1), Android 15, e Chromecast designata da eseguire dopo G2."
   ],
-  "evidence_note": "I PASS storici da PC sono USER_REPORTED; non costituiscono qualificazione del futuro APK."
+  "evidence_note": "I PASS storici da PC sono USER_REPORTED; non costituiscono qualificazione del futuro APK.",
+  "phone": {
+    "model": "Motorola edge 40 neo",
+    "model_code": "XT2307-1",
+    "android": "15",
+    "source": "USER_REPORTED nella conversazione del 24 ottobre 2026",
+    "tested": false
+  }
 }

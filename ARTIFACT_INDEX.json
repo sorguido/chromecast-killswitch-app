@@ -164,7 +164,7 @@
       "phases": [
         "P1"
       ],
-      "status": "PLANNED"
+      "status": "AVAILABLE"
     },
     {
       "path": "evidence/current/QUALITY_REPORT.md",
@@ -173,7 +173,7 @@
         "P2",
         "P4"
       ],
-      "status": "PLANNED"
+      "status": "AVAILABLE"
     },
     {
       "path": "evidence/current/DEVICE_ACCEPTANCE.md",
@@ -191,6 +191,63 @@
         "P4"
       ],
       "status": "PLANNED"
+    },
+    {
+      "path": "research/decisions/CORE.md",
+      "role": "implementation_evidence",
+      "phases": [
+        "P1",
+        "P2"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "research/decisions/TRANSPORT.md",
+      "role": "implementation_evidence",
+      "phases": [
+        "P1",
+        "P2"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "role": "licenses",
+      "phases": [
+        "P0",
+        "P2",
+        "P4"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "vendor/spake2-source/README.md",
+      "role": "corresponding_source",
+      "phases": [
+        "P0",
+        "P2",
+        "P4"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "vendor/libadb/LOCAL_CHANGES.md",
+      "role": "dependency_provenance",
+      "phases": [
+        "P0",
+        "P2",
+        "P4"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "evidence/current/local-checks.json",
+      "role": "sanitized_test_receipt",
+      "phases": [
+        "P2",
+        "P4"
+      ],
+      "status": "AVAILABLE"
     }
   ],
   "historical_receipts": [],
