@@ -4,6 +4,8 @@ Telecomando Android locale per la Chromecast con Google TV HD associata: configu
 
 Il prodotto è implementato; la qualifica fisica sul **Motorola edge 40 neo (XT2307-1), Android 15**, e sulla Chromecast rimane obbligatoria. Le prove locali non equivalgono al collaudo finale.
 
+L’[APK 1.0.0 e i sorgenti per il collaudo](deliverables/1.0.0/LEGGIMI.md) sono disponibili nella postazione di lavoro; la [ricevuta G3](evidence/current/DEVICE_ACCEPTANCE.md) identifica il file e raccoglie gli esiti. I binari rimangono fuori da Git.
+
 ## Installazione e uso
 
 1. Usa l’APK release indicato nel [rapporto qualità](evidence/current/QUALITY_REPORT.md), verificandone SHA-256. Sul telefono apri l’APK e consenti l’installazione da quella sorgente se Android lo richiede.

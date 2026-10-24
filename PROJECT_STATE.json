@@ -2,14 +2,14 @@
   "schema_version": 1,
   "authoritative": false,
   "execution_path": "PRIMARY",
-  "phase": "P2",
-  "phase_status": "FINAL_QUALIFICATION",
+  "phase": "P3",
+  "phase_status": "HUMAN_REQUIRED",
   "completed_gates": [
     "G0",
-    "G1"
+    "G1",
+    "G2"
   ],
   "pending_gates": [
-    "G2",
     "G3",
     "G4"
   ],
@@ -20,20 +20,24 @@
     "docs/phase-specific/P0_BUILD_BASELINE.md",
     "research/decisions/P1_IMPLEMENTATION.md",
     "research/decisions/CORE.md",
-    "research/decisions/TRANSPORT.md"
+    "research/decisions/TRANSPORT.md",
+    "evidence/current/QUALITY_REPORT.md",
+    "evidence/current/local-checks.json",
+    "evidence/current/DEVICE_ACCEPTANCE.md",
+    "docs/phase-specific/DEVICE_ACCEPTANCE.md"
   ],
   "relevant_corroborations": [
     "C1",
     "C2",
     "C3"
   ],
-  "next_action": "Concludere QA release, persistenza AtomicFile e riproducibilità binaria; preparare APK definitivo e richiesta unica per G3 sul Motorola/Chromecast.",
-  "last_verified_head": "4a5d69d",
+  "next_action": "Installare e collaudare lo stesso APK release 1.0.0 sul Motorola e sulla Chromecast secondo D01–D13; registrare esiti reali nella ricevuta DEVICE_ACCEPTANCE. Nessuna ulteriore attività indipendente necessaria prima del collaudo.",
+  "last_verified_head": "0d1265e1d621e3251281daf79c0ecccbd7de7f99",
   "bootstrap_source_head": "970fcccf2d73ef9252cc42263ab9a0f513bed14f",
   "open_inputs": [
-    "Collaudo G3 sul Motorola edge 40 neo (XT2307-1), Android 15, e Chromecast designata da eseguire dopo G2."
+    "Esiti fisici D01–D13 sul Motorola edge 40 neo (XT2307-1), Android 15, e Chromecast designata. APK release SHA-256 8eb281a2ebb21807df137513702e3b03647e0ff5692c543e59350be8783f8dba"
   ],
-  "evidence_note": "I PASS storici da PC sono USER_REPORTED; non costituiscono qualificazione del futuro APK.",
+  "evidence_note": "G2 PROVEN localmente: 23 test unitari, 14 strumentali, lint senza errori, APK firmato e rebuild indipendente identico. PASS storici da PC e modello telefono restano USER_REPORTED; G3/G4 aperti.",
   "phone": {
     "model": "Motorola edge 40 neo",
     "model_code": "XT2307-1",

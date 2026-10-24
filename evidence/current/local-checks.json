@@ -97,6 +97,48 @@
       "path": "evidence/current/screenshots/evidence/synthetic-off-dialog-font200-top.png",
       "sha256": "2b4995c1844b353d97f158eb1e40b91a99c9a4bf32137f191a86f1df297ad982",
       "scope": "UI_SYNTHETIC_RENDERED"
+    },
+    {
+      "path": "evidence/current/screenshots/release/home-dark.png",
+      "sha256": "65a92078081823b6b6a18a359a9126544e4c785777c9e3fa34c38174884c8d15",
+      "scope": "RELEASE_REAL_UI"
+    },
+    {
+      "path": "evidence/current/screenshots/release/home-light.png",
+      "sha256": "4c429ced8e6719b878271f1abfa84121dbdf8e050f34e581a6d7bebc6aebb52e",
+      "scope": "RELEASE_REAL_UI"
+    },
+    {
+      "path": "evidence/current/screenshots/release/offline-help.png",
+      "sha256": "b5c46fa1333860df905341e976ddc4977ec03bf277da2265c6bae6c41c7f5122",
+      "scope": "RELEASE_REAL_UI"
+    },
+    {
+      "path": "evidence/current/screenshots/release/pairing-guide.png",
+      "sha256": "d61df71ec2530206a12c4612055b3a272be7695dd9abd88f26ddb1dec8d92745",
+      "scope": "RELEASE_REAL_UI"
     }
-  ]
+  ],
+  "source_commit": "0d1265e1d621e3251281daf79c0ecccbd7de7f99",
+  "release": {
+    "version": "1.0.0",
+    "version_code": 1,
+    "sha256": "8eb281a2ebb21807df137513702e3b03647e0ff5692c543e59350be8783f8dba",
+    "certificate_sha256": "2936676a220e4a9682171fbf0c9b91552acd8fc4f120318c6a0aebe6e6722ecc",
+    "signature_verified": true,
+    "zip_alignment_16k_verified": true,
+    "independent_offline_rebuild_identical": true,
+    "installed_apk_identical": true,
+    "runtime_scope": "Emulatore API35 x86_64: installazione, avvio, riapertura, temi, onboarding e guida; target fisico PENDING"
+  },
+  "lint": {
+    "errors": 0,
+    "warnings": 19,
+    "reviewed": "Versioni più recenti/target37, codice upstream obsoleto e trust TLS documentato; nessuna soppressione globale"
+  },
+  "delivery_artifacts_sha256": {
+    "chromecast-killswitch-1.0.0-source.bundle": "9567c689cf9892dd8c8ebdd361ecf1e134654a4ffe5d439bffcf892a5f2c5ad0",
+    "chromecast-killswitch-1.0.0-source.tar.gz": "1252c5ffe4f23e69ef2f661a9717842f996cd32ea62869536ea7b21def956ec0",
+    "chromecast-killswitch-1.0.0.apk": "8eb281a2ebb21807df137513702e3b03647e0ff5692c543e59350be8783f8dba"
+  }
 }
