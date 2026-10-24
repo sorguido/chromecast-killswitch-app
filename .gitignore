@@ -1,0 +1,38 @@
+# Android / Gradle
+.gradle/
+.kotlin/
+**/build/
+local.properties
+.idea/
+*.iml
+.cxx/
+.externalNativeBuild/
+captures/
+
+# Deliverable binari: consegnare come artefatti, non nel sorgente
+*.apk
+*.aab
+*.apks
+
+# Segreti e identità locali
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+*.p12
+*.pfx
+*.key
+adbkey
+adbkey.pub
+private/
+.local/
+
+# File temporanei
+*.log
+*.tmp
+*.swp
+.DS_Store
+__pycache__/

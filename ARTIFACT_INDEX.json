@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "authoritative": false,
+  "canonical_files": [
+    "START.md",
+    "AGENTS.md",
+    "ROADMAP.md",
+    "CORROBORATIONS.md"
+  ],
+  "artifacts": [
+    {
+      "path": "START.md",
+      "role": "canonical_bootstrap",
+      "phases": [
+        "ALL"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "AGENTS.md",
+      "role": "canonical_governance",
+      "phases": [
+        "ALL"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "ROADMAP.md",
+      "role": "canonical_state_machine",
+      "phases": [
+        "ALL"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "CORROBORATIONS.md",
+      "role": "canonical_evidence_router",
+      "phases": [
+        "ALL"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "PROJECT_STATE.json",
+      "role": "state_cache",
+      "phases": [
+        "ALL"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "ARTIFACT_INDEX.json",
+      "role": "context_router",
+      "phases": [
+        "ALL"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "README.md",
+      "role": "human_overview",
+      "phases": [
+        "P0",
+        "P4"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": ".gitignore",
+      "role": "repository_hygiene",
+      "phases": [
+        "ALL"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "docs/AI_PM_GOAL.md",
+      "role": "execution_mandate",
+      "phases": [
+        "P0",
+        "RESUME"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "docs/PRODUCT_SPEC.md",
+      "role": "product_requirements",
+      "phases": [
+        "P0",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "docs/COMMAND_CONTRACT.md",
+      "role": "technical_contract",
+      "phases": [
+        "P0",
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "docs/phase-specific/P0_BUILD_BASELINE.md",
+      "role": "phase_decision",
+      "phases": [
+        "P0"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "docs/phase-specific/DEVICE_ACCEPTANCE.md",
+      "role": "operator_procedure",
+      "phases": [
+        "P2",
+        "P3"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "evidence/current/BOOTSTRAP.md",
+      "role": "provenance_and_baseline",
+      "phases": [
+        "P0"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "research/corroborations/C1.md",
+      "role": "corroboration",
+      "phases": [
+        "P0",
+        "P1"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "research/corroborations/C2.md",
+      "role": "corroboration",
+      "phases": [
+        "P0",
+        "P1"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "research/corroborations/C3.md",
+      "role": "corroboration",
+      "phases": [
+        "P0",
+        "P1",
+        "P3"
+      ],
+      "status": "AVAILABLE"
+    },
+    {
+      "path": "research/decisions/P1_IMPLEMENTATION.md",
+      "role": "phase_decision",
+      "phases": [
+        "P1"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "path": "evidence/current/QUALITY_REPORT.md",
+      "role": "quality_evidence",
+      "phases": [
+        "P2",
+        "P4"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "path": "evidence/current/DEVICE_ACCEPTANCE.md",
+      "role": "device_evidence",
+      "phases": [
+        "P3",
+        "P4"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "path": "evidence/current/DELIVERY.md",
+      "role": "delivery_evidence",
+      "phases": [
+        "P4"
+      ],
+      "status": "PLANNED"
+    }
+  ],
+  "historical_receipts": [],
+  "historical_receipts_policy": "Creare evidence/runs/ solo quando esistono receipt reali da conservare; indicizzarle alla chiusura.",
+  "routing_note": "Leggere integralmente i canonici e le cache; poi solo artefatti pertinenti. PLANNED non significa file mancante da creare vuoto. Git ed evidenze prevalgono."
+}
