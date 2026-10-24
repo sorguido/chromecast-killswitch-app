@@ -33,6 +33,8 @@ Work autonomously on code, unprotected documents, project-local dependencies, bu
 
 The accepted publication mandate also authorizes new non-colliding tags and GitHub releases in this repository using available access. It does **not** authorize changing repository visibility, overwriting releases/tags, force pushes, or collecting private device data.
 
+The specific 2026-10-24 history-cleanup mandate authorized the targeted rewrite, explicit-lease updates to `main` and `v1.1.0`, the necessary existing-release corrections, canonical outcome records and a subsequent main-only Gradle cache-default change. Results and remaining GitHub residuals are recorded in [PUBLICATION.md](docs/PUBLICATION.md). This completed operation is not standing authorization for future rewrites or release replacement. Visibility remains private; private backups must not be pushed or merged back.
+
 A human gate is only for a genuinely necessary decision, access or action: physical pairing, an unauthorized live operation, scope expansion, undelegated canonical changes, destructive changes, missing credentials or sensitive publication not already authorized. Complete independent work first and prepare a concrete result. Milestones and subagent creation do not require approval.
 
 A necessary request identifies the constraint and includes:

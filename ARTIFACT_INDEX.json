@@ -85,5 +85,5 @@
       "status": "AVAILABLE"
     }
   ],
-  "routing_note": "Public artifacts are self-contained. Private operational records are under ignored development/. Git and verified deliverables take precedence."
+  "routing_note": "Public artifacts are self-contained. docs/PUBLICATION.md records verified history/release cleanup and the remaining GitHub residual-access dependency. Private backups, maps, support draft and operational records remain under ignored development/. Git and verified deliverables take precedence."
 }

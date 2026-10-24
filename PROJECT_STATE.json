@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "authoritative": false,
-  "phase": "LOCALIZATION_PUBLICATION",
+  "phase": "LOCALIZATION_PUBLICATION_HISTORY_CLEANUP",
   "phase_status": "HUMAN_REQUIRED",
   "version": "1.1.0",
   "version_code": 2,
@@ -10,21 +10,23 @@
     "L1",
     "L2_CURRENT_TREE",
     "L3",
-    "L4"
+    "L4",
+    "L2_HISTORY_PUBLICATION_APPROVAL",
+    "L2_REACHABLE_HISTORY"
   ],
   "pending_gates": [
-    "L2_HISTORY_PUBLICATION_APPROVAL"
+    "L2_GITHUB_RESIDUAL_REMOVAL"
   ],
-  "evidence_note": "24 unit passes; 20 instrumented passes and one opt-in pairing skip on API35. Clean unsigned clone build, original signing continuity, emulator in-place update, published asset download hashes and exact tagged source correspondence verified. Physical operations remain user-reported for the previous app; old personal references remain in shared history.",
+  "evidence_note": "Targeted rewrite and explicit-lease main/tag push verified by a fresh remote clone and independent review. All release input files are unchanged; original APK/signature and unchanged payload asset IDs preserved. Updated source/checksums/receipt and all six downloads verified. Main-only shared Gradle cache behavior checked without rebuilding. Nine superseded commits and identified old private content still resolve through authenticated GitHub API.",
   "relevant_artifacts": [
     "docs/PRODUCT_SPEC.md",
     "docs/COMMAND_CONTRACT.md",
     "docs/BUILD.md",
     "docs/PUBLICATION.md"
   ],
-  "next_action": "Owner decides whether to authorize targeted historical privacy sanitization or explicitly accept the historical personal references before any future public visibility. Private report and actionable gate are in development/. No further independent release work remains.",
+  "next_action": "Owner submits the privately prepared GitHub Support request, then rechecks old-SHA private-content access. Keep repository PRIVATE. Rewrite authorization and reachable-history cleanup are complete; GitHub residual removal remains open.",
   "release_tag": "v1.1.0",
-  "release_commit": "0c83c63896c5d65cebe7cbfd8c1c6d78d34529cb",
+  "release_commit": "7177a18bc81c74fb062fbcfedca4756ff0fcedd6",
   "release_url": "https://github.com/sorguido/chromecast-killswitch-app/releases/tag/v1.1.0",
   "apk_sha256": "4e1583fc7421ba2ed508966ec8c567a336c0f0be5d6fa775a3a001885bf13e43"
 }

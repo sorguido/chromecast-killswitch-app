@@ -9,7 +9,7 @@ elif [[ ! -f development/signing.properties ]]; then
   echo "Missing development/signing.properties; see docs/BUILD.md or use --unsigned." >&2
   exit 2
 fi
-export GRADLE_USER_HOME="${GRADLE_USER_HOME:-$PWD/development/local/gradle}"
+export GRADLE_USER_HOME="${GRADLE_USER_HOME:-$HOME/.gradle}"
 if [[ -z "${ANDROID_HOME:-}" && -d development/local/sdk ]]; then
   export ANDROID_HOME="$PWD/development/local/sdk"
 fi

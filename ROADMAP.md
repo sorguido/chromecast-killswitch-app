@@ -19,6 +19,12 @@ The original implementation completed toolchain, integration and local qualifica
 
 [BUILD.md](docs/BUILD.md) owns build/distribution instructions. [PUBLICATION.md](docs/PUBLICATION.md) owns current results and limitations. JSON caches only route that evidence.
 
-All stages must be addressed before `MILESTONE_COMPLETE`. If remote publication is technically unavailable, finish the verified local release bundle and provide the exact missing access or action; do not call a local bundle or draft a published release. Unresolved private history exposure prevents declaring the repository publication-ready, even if the current tree is clean. Do not change visibility or rewrite shared history as part of this phase.
+All stages must be addressed before `MILESTONE_COMPLETE`. If remote publication is technically unavailable, finish the verified local release bundle and provide the exact missing access or action; do not call a local bundle or draft a published release. Unresolved private history exposure prevents declaring the repository publication-ready, even if the current tree is clean. Do not change visibility. The separately authorized 2026-10-24 targeted history cleanup is recorded below; it does not authorize future rewrites.
 
 Preserve the user-reported physical evidence without inventing detail. Recheck the risks affected by changes; emulator/synthetic tests do not certify live tunnel behavior. Any genuinely unavoidable human dependency follows `AGENTS.md` after all independent work is finished.
+
+## Targeted history cleanup — 2026-10-24
+
+The specific mandate satisfied `L2_HISTORY_PUBLICATION_APPROVAL`. `L2_REACHABLE_HISTORY` is proven by a new remote clone: current branch/tag ancestry is sanitized, release source inputs and the original APK are preserved, and the release source/checksum/receipt assets are aligned. The shared Gradle cache default is a subsequent change on `main`, outside `v1.1.0`.
+
+`L2_GITHUB_RESIDUAL_REMOVAL` remains open: authenticated access to old commits still exposes identified private context. A support request is prepared privately and has not been sent. No pull requests, forks, Actions runs/artifacts, Pages or wiki were present in the checked inventory. L2 and the overall publication-readiness objective are not complete; state remains `HUMAN_REQUIRED` for this concrete residual, not for renewed rewrite approval. See [PUBLICATION.md](docs/PUBLICATION.md) for evidence and limits.

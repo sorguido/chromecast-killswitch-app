@@ -20,6 +20,8 @@ Use a JDK supported by Gradle 9.6 (the recorded baseline used OpenJDK 25), Andro
 
 Set `ANDROID_HOME` to your SDK, or configure `sdk.dir` in the local `local.properties` file. The build script also recognizes the project-local SDK under `development/local/sdk`. Install required SDK packages using your existing SDK tools; this project does not require modifying host-wide settings.
 
+The build script uses Gradle's shared `$HOME/.gradle` cache by default and respects a nonempty `GRADLE_USER_HOME` override. Project caches and build outputs remain under `development/`. Existing caches, SDKs and emulators are not moved or removed. Keep the Gradle Wrapper (`gradlew`, `gradlew.bat` and `gradle/wrapper/`) as the project's pinned launcher.
+
 ## Build without the release key
 
 ```sh
@@ -51,10 +53,10 @@ Android only accepts an in-place update when application ID and signing certific
 
 ## Emulator checks
 
-Build the test packages using the project wrapper and project-local Gradle cache:
+Build the test packages using the project wrapper and your default Gradle cache (or an explicit `GRADLE_USER_HOME` override):
 
 ```sh
-GRADLE_USER_HOME="$PWD/development/local/gradle" ./gradlew \
+./gradlew \
   --project-cache-dir development/gradle-project \
   :app:assembleDebug :app:assembleDebugAndroidTest
 ```
@@ -67,7 +69,7 @@ Locale checks include Italian/regional Italian, English, another primary languag
 
 `development/` contains local signing material, caches, build outputs, raw evidence and working release packages. A small set of defensive ignore patterns prevents accidental secret/binary commits and covers tooling files that cannot reasonably be routed there. The ignored root `local.properties` is an SDK locator, not a required public input. Do not archive the working directory as release source.
 
-A release must use a new tag on the verified commit, the original application ID/signing identity, and a higher version code. Do not overwrite existing tags/assets. Produce the source archive from the tracked tag, for example:
+A normal new release must use a new tag on the verified commit, the original application ID/signing identity, and a higher version code. Do not overwrite existing tags/assets without specific authorization. The separately authorized 2026-10-24 history cleanup remapped `v1.1.0` to equivalent sources and updated only its source archive, checksums, verification receipt and release notes; the APK was not rebuilt or replaced. See [PUBLICATION.md](PUBLICATION.md). Produce the source archive from the tracked tag, for example:
 
 ```sh
 mkdir -p development/releases

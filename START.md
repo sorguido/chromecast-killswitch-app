@@ -12,4 +12,6 @@ Before editing:
 
 For the localization/publication phase, the accepted scope is summarized in `ROADMAP.md`; `docs/PRODUCT_SPEC.md` owns product requirements, `docs/COMMAND_CONTRACT.md` owns technical behavior, and `docs/PUBLICATION.md` records verification. A fresh clone needs no personal pages or private files to understand or build the product. Local historical mandates and raw evidence, where present, belong under ignored `development/` and are not public prerequisites.
 
+After the targeted history cleanup, resume from the sanitized remote refs. Old clones, commit maps and backups are private recovery material, not branches to merge or push. The remaining GitHub residual-access dependency and its scope are recorded in `docs/PUBLICATION.md`; the cleanup authorization itself has already been fulfilled.
+
 Before stopping, update reconstructible caches and the current phase artifact with results, evidence, unresolved requirements and the next action. Distinguish implemented, locally verified and user-reported physical results. An interruption is not completion.
