@@ -15,7 +15,7 @@ A local Android remote for **Chromecast with Google TV HD**: enable or disable A
 3. Return to the TV's main Wireless debugging screen. Select its connection service in the app, or enter the connection port. This is different from the pairing port.
 4. Choose **Enable and reboot** or **Disable and reboot**, read the confirmation, and confirm. Restarting interrupts playback. The app verifies the saved settings and reads them again after startup.
 
-The app uses **Italian when the phone's primary system language is Italian**, including regional variants, and **English for every other primary system language**. Italian as a secondary language does not select Italian. There is no language selector or per-app language preference.
+The app uses **Italian when the phone's primary system language is Italian**, including regional variants, and **English for every other primary system language**.
 
 ON enables Android's always-on and lockdown settings for Proton. OFF removes both; Proton's own Auto-connect preference remains separate and can still start the VPN.
 
@@ -23,7 +23,7 @@ ON enables Android's always-on and lockdown settings for Proton. OFF removes bot
 
 The supported TV configuration is **Chromecast with Google TV HD (`boreal`), Android 14/API 34, primary Android user `0`, and Proton VPN (`ch.protonvpn.android`)**. Other TV models, firmware versions and VPN providers are outside this project's scope.
 
-The declared phone minimum is **Android 8/API 26**. The user reports successful real operation, including from the app, with a **Motorola edge 40 neo running Android 15**. This is a tested phone, not a brand restriction. Neither the minimum API nor that report proves every allowed phone or the new bilingual APK; see the [release verification record](docs/PUBLICATION.md).
+The declared phone minimum is **Android 8/API 26**
 
 If the connection does not return, re-enable Wireless debugging **on the TV**, then use **Read state again** or enter the current connection endpoint. The app cannot enable a disabled ADB service remotely and does not automatically repeat uncertain writes or restarts. Its help is available offline. USB debugging already enabled and a previously authorized PC provide a possible [USB recovery route](docs/COMMAND_CONTRACT.md#usb-recovery).
 
