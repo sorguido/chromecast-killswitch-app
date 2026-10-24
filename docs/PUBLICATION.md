@@ -18,7 +18,11 @@ This record distinguishes local evidence from the owner's historical physical te
 
 **Independent review:** no blocking production regression was identified in primary-system language selection, resource-ID state, dialog language, preserved operations/identity/storage, signing or private layout. Review corrected the dialog test configuration and the obsolete Italian recovery-button wording, and verified safety-message equivalence. Older Android locale fallback (API 26–32), all allowed phones/ABIs, native dependency rebuilds and the new APK's physical TV operations remain unverified. No synthetic test certifies tunnel or leak behavior.
 
-Clean-checkout and final release artifact checks are being completed before publication; pending checks are not counted as PASS.
+**PROVEN clean rebuild:** a separate clone of implementation commit `817b8d5` ran `scripts/build.sh --unsigned --offline --no-build-cache`, using only the documented SDK and existing dependency cache. It contained no signing configuration or original key. All 124 tasks executed; tests, lint and unsigned release assembly succeeded. ZIP entry comparison with the signed working build found identical code/resources and only the expected VCS revision metadata difference. Later release-record edits do not change build inputs.
+
+**PROVEN emulator update:** the original signed 1.0.0 APK was installed and launched, then updated in place with signed 1.1.0 using `adb install -r`. Android accepted the update and the English release screen launched correctly. Package metadata retained the original installation time and recorded the newer update time. No physical pairing is claimed by this emulator check.
+
+The delivered revision is tag `v1.1.0`; [GitHub release assets](https://github.com/sorguido/chromecast-killswitch-app/releases/tag/v1.1.0) and `SHA256SUMS` identify the signed APK, matching application source, runtime-source supplement and notices. The release's verification receipt records final artifact and downloaded-asset checks without requiring a self-referential source checksum in this file.
 
 ## Source, licenses and private material
 
