@@ -3,8 +3,8 @@
 A local Android remote for **Chromecast with Google TV HD**: enable or disable Android's always-on VPN and lockdown together for Proton VPN, verify the saved settings, and restart the Chromecast after confirmation. The app checks configuration; it does not continuously monitor the VPN tunnel or certify leak protection.
 
 <p align="center">
-  <img src="docs/images/app-home-it.jpg" width="340" alt="Chromecast Kill Switch home screen in Italian">
-  <br><em>Italian home screen supplied by the user from the version in use.</em>
+  <img src="docs/images/app-home-en.jpeg" width="340" alt="Chromecast Kill Switch home screen in English">
+  <br><em>English home screen supplied by the user from the version in use.</em>
 </p>
 
 ## Download and use

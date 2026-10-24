@@ -36,7 +36,7 @@ Private signing configuration, original key, SDK/cache tools, build outputs, pre
 
 **PUBLIC VISIBILITY BLOCKER:** this repository remains **PRIVATE**. Its complete history is not yet publication-ready. Before changing visibility, the owner must authorize targeted history sanitization or explicitly accept publication of the identified historical context. Neither history rewriting nor visibility changes are part of this release. The private audit identifies paths and commits without reproducing secret values. A release published in this private repository retains the same access perimeter.
 
-The supplied README screenshot is the owner's real Italian home screen from the version in use. Its encoded image content is preserved, and EXIF/IPTC/comment metadata inspection found no unnecessary personal metadata to remove. It illustrates the interface, not complete validation of this release.
+The v1.1.0 tag preserves the owner's original Italian screenshot. The current README uses the English screenshot subsequently supplied by the owner, with its image content preserved. These screenshots illustrate observed interface states, not complete validation of every release path.
 
 ## Published release verification
 
